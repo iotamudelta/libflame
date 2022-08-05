@@ -698,6 +698,7 @@ fla_enable_blas3_front_end_cntl_trees
 fla_enable_external_lapack_interfaces
 fla_enable_external_lapack_for_subproblems
 fla_enable_lapack2flame
+fla_enable_lapack2flash
 fla_enable_builtin_blas
 fla_enable_non_critical_code
 fla_c_lang_flags
@@ -799,6 +800,7 @@ enable_max_arg_list_hack
 enable_non_critical_code
 enable_builtin_blas
 enable_lapack2flame
+enable_lapack2flash
 enable_external_lapack_for_subproblems
 enable_external_lapack_interfaces
 enable_blas3_front_end_cntl_trees
@@ -1514,6 +1516,7 @@ Optional Features:
                           if this option is enabled, then
                           external-lapack-for-subproblems MUST be disabled.
                           (Disabled by default.)
+  --enable-lapack2flash   (In test at the moment)
   --enable-external-lapack-for-subproblems
                           Enable code that causes most of the
                           computationally-intensive functions within libflame
@@ -6492,53 +6495,67 @@ printf "%s\n" "no" >&6; }
 
 
 
-		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether user requested the lapack2flame compatibility layer" >&5
-printf %s "checking whether user requested the lapack2flame compatibility layer... " >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether user requested the lapack2flame compatibility layer" >&5
+	printf %s "checking whether user requested the lapack2flame compatibility layer... " >&6; }
 
-				# Check whether --enable-lapack2flame was given.
+# Check whether --enable-lapack2flame was given.
 if test ${enable_lapack2flame+y}
 then :
-  enableval=$enable_lapack2flame;
-				if test "$enableval" = "no" ; then
-
-
-						fla_enable_lapack2flame=no
-
-		elif test "$enableval" = "yes" ; then
-
-						fla_enable_lapack2flame=yes
-		else
-
-												as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LAPACK2FLAME!" "$LINENO" 5
-		fi
-
+	enableval=$enable_lapack2flame;
+	if test "$enableval" = "no" ; then
+		fla_enable_lapack2flame=no
+	elif test "$enableval" = "yes" ; then
+		fla_enable_lapack2flame=yes
+	else
+		as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LAPACK2FLAME!" "$LINENO" 5
+	fi
 else $as_nop
-
-						fla_enable_lapack2flame=no
-
-
+	fla_enable_lapack2flame=no
 fi
 
 
-		if   test "$fla_enable_lapack2flame" = "yes" ; then
+if   test "$fla_enable_lapack2flame" = "yes" ; then
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+		printf "%s\n" "yes" >&6; }
+	printf "%s\n" "#define FLA_ENABLE_LAPACK2FLAME 1" >>confdefs.h
+elif test "$fla_enable_lapack2flame" = "no" ; then
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+		printf "%s\n" "no" >&6; }
+else
+	as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LAPACK2FLAME!" "$LINENO" 5
+fi
 
-				{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-printf "%s\n" "yes" >&6; }
 
 
-printf "%s\n" "#define FLA_ENABLE_LAPACK2FLAME 1" >>confdefs.h
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether user requested the lapack2flash compatibility layer" >&5
+	printf %s "checking whether user requested the lapack2flash compatibility layer... " >&6; }
 
-
-	elif test "$fla_enable_lapack2flame" = "no" ; then
-
-				{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
-printf "%s\n" "no" >&6; }
-
+# Check whether --enable-lapack2flash was given.
+if test ${enable_lapack2flash+y}
+then :
+	enableval=$enable_lapack2flash;
+	if test "$enableval" = "no" ; then
+		fla_enable_lapack2flash=no
+	elif test "$enableval" = "yes" ; then
+		fla_enable_lapack2flash=yes
 	else
-				as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LAPACK2FLAME!" "$LINENO" 5
+		as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LAPACK2FLASH!" "$LINENO" 5
 	fi
+else $as_nop
+	fla_enable_lapack2flash=no
+fi
 
 
+if   test "$fla_enable_lapack2flash" = "yes" ; then
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+		printf "%s\n" "yes" >&6; }
+	printf "%s\n" "#define FLA_ENABLE_LAPACK2FLASH 1" >>confdefs.h
+elif test "$fla_enable_lapack2flash" = "no" ; then
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+		printf "%s\n" "no" >&6; }
+else
+	as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LAPACK2FLASH!" "$LINENO" 5
+fi
 
 
 
