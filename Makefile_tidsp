@@ -103,9 +103,6 @@ MK_MAP_BLAS2FLAMEC_OBJS        :=
 MK_MAP_LAPACK2FLAMEC_SRC       := 
 MK_MAP_LAPACK2FLAMEC_OBJS      := 
 
-MK_MAP_LAPACK2FLASH_SRC        := 
-MK_MAP_LAPACK2FLASH_OBJS       := 
-
 MK_FLABLAS_F2C_SRC             := 
 MK_FLABLAS_F2C_OBJS            := 
 
@@ -252,15 +249,11 @@ MK_LAPACK_FLAMEC_OBJS     := $(patsubst $(SRC_DIR)/%.c, $(BASE_OBJ_DIR)/%.o, \
 MK_MAP_LAPACK2FLAMEC_OBJS := $(patsubst $(SRC_DIR)/%.c, $(BASE_OBJ_DIR)/%.o, \
                                         $(filter %.c, $(MK_MAP_LAPACK2FLAMEC_SRC)))
 
-MK_MAP_LAPACK2FLASH_OBJS  := $(patsubst $(SRC_DIR)/%.c, $(BASE_OBJ_DIR)/%.o, \
-                                        $(filter %.c, $(MK_MAP_LAPACK2FLASH_SRC)))
-
 # Combine the base, blas, and lapack libraries.
 MK_ALL_FLAMEC_OBJS        := $(MK_BASE_FLAMEC_OBJS) \
                              $(MK_BLAS_FLAMEC_OBJS) \
                              $(MK_LAPACK_FLAMEC_OBJS) \
-                             $(MK_MAP_LAPACK2FLAMEC_OBJS) \
-                             $(MK_MAP_LAPACK2FLASH_OBJS)
+                             $(MK_MAP_LAPACK2FLAMEC_OBJS)
 
 # Prepend the flablas source code files, if requested.
 ifeq ($(FLA_ENABLE_BUILTIN_BLAS),yes)
