@@ -12,7 +12,7 @@
 
 #ifdef FLA_ENABLE_LAPACK2FLASH
 
-#include "FLA_lapack2flame_util_defs.h"
+#include "FLASH_lapack2flash_util_defs.h"
 #include "FLA_lapack2flame_return_defs.h"
 #include "FLA_lapack2flame_prototypes.h"
 

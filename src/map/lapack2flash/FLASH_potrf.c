@@ -12,7 +12,7 @@
 
 #ifdef FLA_ENABLE_LAPACK2FLASH
 
-#include "FLA_lapack2flame_util_defs.h"
+#include "FLASH_lapack2flash_util_defs.h"
 #include "FLA_lapack2flame_return_defs.h"
 #include "FLA_lapack2flame_prototypes.h"
 
@@ -41,16 +41,25 @@
   FLA_Obj      A;                                               \
   FLA_Error    e_val;                                           \
   FLA_Error    init_result;                                     \
+  dim_t        depth = DEPTH_SIZE;                              \
+  dim_t        blocksize[3];                                    \
+                                                                \
+  blocksize[depth-1] = BLOCK_SIZE;                              \
                                                                 \
   FLA_Init_safe( &init_result );                                \
   FLA_Param_map_netlib_to_flame_uplo( uplo, &uplo_fla );        \
                                                                 \
-  FLA_Obj_create_without_buffer( datatype, *n, *n, &A );        \
-  FLA_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );              \
+  FLASH_Obj_create_without_buffer( datatype,                    \
+                                   *n,                          \
+                                   *n,                          \
+                                   depth,                       \
+                                   blocksize,                   \
+                                   &A );                        \
+  FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );            \
                                                                 \
-  e_val = FLA_Chol( uplo_fla, A );                              \
+  e_val = FLASH_Chol( uplo_fla, A );                            \
                                                                 \
-  FLA_Obj_free_without_buffer( &A );                            \
+  FLASH_Obj_free_without_buffer( &A );                          \
                                                                 \
   FLA_Finalize_safe( init_result );                             \
                                                                 \
