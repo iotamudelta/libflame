@@ -14,7 +14,7 @@
 // Our implementation is fundamentally different from LAPACK implementation
 #ifdef FLA_ENABLE_YET_LAPACK2FLAME
 
-#include "FLA_lapack2flame_util_defs.h"
+#include "FLASH_lapack2flash_util_defs.h"
 
 /*
   LARFG generates a real elementary reflector H of order n,
