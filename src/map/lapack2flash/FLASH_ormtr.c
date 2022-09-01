@@ -36,16 +36,16 @@
   TODO:: Complete FLA_Accum_T_UT for FLA_BACKWARD.
 */
 
-#define LAPACK_ormtr(prefix, name)                                      \
-  int F77_ ## prefix ## name ## tr( char* side,                         \
-                                    char* uplo,                         \
-                                    char* trans,                        \
-                                    int*  m,                            \
-                                    int*  n,                            \
+#define LAPACK_ormtr(prefix, name)                                                      \
+  int F77_ ## prefix ## name ## tr( char* side,                                         \
+                                    char* uplo,                                         \
+                                    char* trans,                                        \
+                                    int*  m,                                            \
+                                    int*  n,                                            \
                                     PREFIX2LAPACK_TYPEDEF(prefix) *buff_A, int* ldim_A, \
-                                    PREFIX2LAPACK_TYPEDEF(prefix) *buff_t, \
+                                    PREFIX2LAPACK_TYPEDEF(prefix) *buff_t,              \
                                     PREFIX2LAPACK_TYPEDEF(prefix) *buff_C, int* ldim_C, \
-                                    PREFIX2LAPACK_TYPEDEF(prefix) *buff_w, int* lwork, \
+                                    PREFIX2LAPACK_TYPEDEF(prefix) *buff_w, int* lwork,  \
                                     int* info )
 
 #define LAPACK_ormtr_body(prefix)                                       \
@@ -67,18 +67,33 @@
   else /* ( side_fla == FLA_RIGHT) */  m_d = *n;                        \
   m_e = ( m_d - 1 );                                                    \
                                                                         \
-  FLA_Obj_create_without_buffer( datatype, *m, *n, &C );                \
-  FLA_Obj_attach_buffer( buff_C, 1, *ldim_C, &C );                      \
+  FLASH_Obj_create_without_buffer( datatype,                            \
+                                   *m,                                  \
+                                   *n,                                  \
+                                   FLASH_depth,                         \
+                                   FLASH_blocksize,                     \
+                                   &C );                                \
+  FLASH_Obj_attach_buffer( buff_C, 1, *ldim_C, &C );                    \
                                                                         \
-  FLA_Obj_create_without_buffer( datatype, m_d, m_d, &A );              \
-  FLA_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                      \
+  FLASH_Obj_create_without_buffer( datatype,                            \
+                                   m_d,                                 \
+                                   m_d,                                 \
+                                   FLASH_depth,                         \
+                                   FLASH_blocksize,                     \
+                                   &A );                                \
+  FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                    \
                                                                         \
   if ( m_e > 0 ) {                                                      \
-    FLA_Obj ATL, ATR, ABL, ABR, T, W, t;                                \
+    FLA_Obj    ATL, ATR, ABL, ABR, T, W, t;                             \
     FLA_Direct direct;                                                  \
                                                                         \
-    FLA_Obj_create_without_buffer( datatype, m_e, 1, &t );              \
-    FLA_Obj_attach_buffer( buff_t, 1, m_e, &t );                        \
+    FLASH_Obj_create_without_buffer( datatype,                          \
+                                     m_e,                               \
+                                     1,                                 \
+                                     FLASH_depth,                       \
+                                     FLASH_blocksize,                   \
+                                     &t );                              \
+    FLASH_Obj_attach_buffer( buff_t, 1, m_e, &t );                      \
     PREFIX2FLAME_INVERT_TAU(prefix,t);                                  \
                                                                         \
     if ( uplo_fla == FLA_LOWER_TRIANGULAR ) {                           \
@@ -96,7 +111,8 @@
       FLA_Part_1x2( C, &W, &C, 1, FLA_LEFT );                           \
     }                                                                   \
                                                                         \
-    FLA_QR_UT_create_T( A, &T ); FLA_Set( FLA_ZERO, T );                \
+    FLA_QR_UT_create_T( A, &T );                                        \
+    FLASH_Set( FLA_ZERO, T );                                           \
     FLA_Apply_Q_UT_create_workspace_side( side_fla, T, C, &W);          \
     FLA_Accum_T_UT( direct, FLA_COLUMNWISE, A, t, T );                  \
                                                                         \
@@ -104,11 +120,11 @@
       FLA_Obj d2, e2, r;                                                \
                                                                         \
       /* Temporary vectors to store diagonal and subdiagonal */         \
-      FLA_Obj_create( datatype, m_d, 1, 0, 0, &d2 );                    \
-      FLA_Obj_create( datatype, m_e, 1, 0, 0, &e2 );                    \
+      FLASH_Obj_create( datatype, m_d, 1, 0, 0, &d2 );                  \
+      FLASH_Obj_create( datatype, m_e, 1, 0, 0, &e2 );                  \
                                                                         \
       /* Temporary vectors to store realifying transformation */        \
-      FLA_Obj_create( datatype, m_d, 1, 0, 0, &r );                     \
+      FLASH_Obj_create( datatype, m_d, 1, 0, 0, &r );                   \
                                                                         \
       /* Extract diagonals (complex) and realify them. */               \
       FLA_Tridiag_UT_extract_diagonals( uplo_fla, A, d2, e2 );          \
@@ -121,7 +137,7 @@
                 trans_fla == FLA_CONJ_TRANSPOSE )                       \
         FLA_Apply_diag_matrix( FLA_RIGHT, FLA_NO_CONJUGATE, r, C );     \
                                                                         \
-      FLA_Apply_Q_UT( side_fla, trans_fla, direct, FLA_COLUMNWISE, \
+      FLASH_Apply_Q_UT( side_fla, trans_fla, direct, FLA_COLUMNWISE,    \
                       A, T, W, C );                                     \
                                                                         \
       if      ( side_fla  == FLA_LEFT &&                                \
@@ -131,23 +147,23 @@
                 trans_fla == FLA_NO_TRANSPOSE )                         \
         FLA_Apply_diag_matrix( FLA_RIGHT, FLA_CONJUGATE, r, C );        \
                                                                         \
-      FLA_Obj_free( &r  );                                              \
-      FLA_Obj_free( &e2 );                                              \
-      FLA_Obj_free( &d2 );                                              \
+      FLASH_Obj_free( &r  );                                            \
+      FLASH_Obj_free( &e2 );                                            \
+      FLASH_Obj_free( &d2 );                                            \
     } else {                                                            \
-      FLA_Apply_Q_UT( side_fla, trans_fla, direct, FLA_COLUMNWISE,      \
+      FLASH_Apply_Q_UT( side_fla, trans_fla, direct, FLA_COLUMNWISE,    \
                       A, T, W, C );                                     \
     }                                                                   \
                                                                         \
-    FLA_Obj_free( &W );                                                 \
-    FLA_Obj_free( &T );                                                 \
+    FLASH_Obj_free( &W );                                               \
+    FLASH_Obj_free( &T );                                               \
                                                                         \
     PREFIX2FLAME_INVERT_TAU(prefix,t);                                  \
-    FLA_Obj_free_without_buffer( &t );                                  \
+    FLASH_Obj_free_without_buffer( &t );                                \
   }                                                                     \
                                                                         \
-  FLA_Obj_free_without_buffer( &A );                                    \
-  FLA_Obj_free_without_buffer( &C );                                    \
+  FLASH_Obj_free_without_buffer( &A );                                  \
+  FLASH_Obj_free_without_buffer( &C );                                  \
                                                                         \
   FLA_Finalize_safe( init_result );                                     \
                                                                         \

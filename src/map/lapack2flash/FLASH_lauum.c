@@ -27,10 +27,10 @@
   < 0: if INFO = -k, the k-th argument had an illegal value - LAPACK_lauum_op_check
 */
 
-#define LAPACK_lauum(prefix)                                            \
-  int F77_ ## prefix ## lauum( char* uplo,                              \
-                               int* n,                                  \
-                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_A, int* ldim_A, \
+#define LAPACK_lauum(prefix)                                                        \
+  int F77_ ## prefix ## lauum( char* uplo,                                          \
+                               int* n,                                              \
+                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_A, int* ldim_A,  \
                                int* info )
 
 #define LAPACK_lauum_body(prefix)                               \
@@ -43,12 +43,17 @@
                                                                 \
   FLA_Param_map_netlib_to_flame_uplo( uplo, &uplo_fla );        \
                                                                 \
-  FLA_Obj_create_without_buffer( datatype, *n, *n, &A );        \
-  FLA_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );              \
+  FLASH_Obj_create_without_buffer( datatype,                    \
+                                   *n,                          \
+                                   *n,                          \
+                                   FLASH_depth,                 \
+                                   FLASH_blocksize,             \
+                                   &A );                        \
+  FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );            \
                                                                 \
-  FLA_Ttmm( uplo_fla, A );                                      \
+  FLASH_Ttmm( uplo_fla, A );                                    \
                                                                 \
-  FLA_Obj_free_without_buffer( &A );                            \
+  FLASH_Obj_free_without_buffer( &A );                          \
                                                                 \
   FLA_Finalize_safe( init_result );                             \
                                                                 \

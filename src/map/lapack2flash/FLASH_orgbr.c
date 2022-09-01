@@ -35,20 +35,20 @@
   P**T as an N-by-N matrix.
 */
 
-#define LAPACK_orgbr(prefix, name)                                      \
-  int F77_ ## prefix ## name ## br( char* vect,                         \
-                                    int*  m,                            \
-                                    int*  n,                            \
-                                    int*  k,                            \
+#define LAPACK_orgbr(prefix, name)                                                      \
+  int F77_ ## prefix ## name ## br( char* vect,                                         \
+                                    int*  m,                                            \
+                                    int*  n,                                            \
+                                    int*  k,                                            \
                                     PREFIX2LAPACK_TYPEDEF(prefix)* buff_A, int* ldim_A, \
-                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_t, \
-                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_w, \
-                                    int* lwork,                         \
+                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_t,              \
+                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_w,              \
+                                    int* lwork,                                         \
                                     int* info )
 
 // buff_t shoud not include any zero. if it has one, that is the right dimension to go.
 #define LAPACK_orgbr_body(prefix)                                       \
-  FLA_Datatype datatype   = PREFIX2FLAME_DATATYPE(prefix);              \
+  FLA_Datatype datatype = PREFIX2FLAME_DATATYPE(prefix);                \
   FLA_Obj      A, ATL, ATR, ABL, ABR, A1, A2, Ah, T, TL, TR, t;         \
   FLA_Error    init_result;                                             \
   FLA_Uplo     uplo;                                                    \
@@ -59,7 +59,7 @@
   m_A = *m; n_A = *n;                                                   \
                                                                         \
   /* A is assumed to m x k for 'Q' and k x n for 'Q'. */                \
-  if        ( *vect == 'Q' ) {                                          \
+  if ( *vect == 'Q' ) {                                                 \
     uplo = ( *m >= *k ? FLA_UPPER_TRIANGULAR : FLA_LOWER_TRIANGULAR );  \
     m_t = min( *m, *k );                                                \
   } else {/*( *vect == 'P' ) */                                         \
@@ -67,12 +67,22 @@
     m_t = min( *k, *n );                                                \
   }                                                                     \
                                                                         \
-  FLA_Obj_create_without_buffer( datatype, m_A, n_A, &A );              \
-  FLA_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                      \
+  FLASH_Obj_create_without_buffer( datatype,                            \
+                                   m_A,                                 \
+                                   n_A,                                 \
+                                   FLASH_depth,                         \
+                                   FLASH_blocksize,                     \
+                                   &A );                                \
+  FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                    \
                                                                         \
-  FLA_Obj_create_without_buffer( datatype, m_t, 1, &t );                \
+  FLASH_Obj_create_without_buffer( datatype,                            \
+                                   m_t,                                 \
+                                   1,                                   \
+                                   FLASH_depth,                         \
+                                   FLASH_blocksize,                     \
+                                   &t );                                \
   if ( m_t > 0 ) {                                                      \
-    FLA_Obj_attach_buffer( buff_t, 1, m_t, &t );                        \
+    FLASH_Obj_attach_buffer( buff_t, 1, m_t, &t );                      \
     PREFIX2FLAME_INVERT_TAU(prefix,t);                                  \
   }                                                                     \
                                                                         \
@@ -80,7 +90,7 @@
                    &ABL, &ABR, m_t, m_t, FLA_TL );                      \
                                                                         \
   /* Accumulate house-holder vectors */                                 \
-  if        ( *vect == 'Q' )    {  /* U */                              \
+  if ( *vect == 'Q' ) {  /* U */                                        \
     FLA_Part_2x1( ATL, &A1,                                             \
                        &A2, ( uplo == FLA_LOWER_TRIANGULAR ), FLA_TOP );\
     FLA_Merge_2x1( A2,                                                  \
@@ -91,18 +101,19 @@
                      &T, FLA_Obj_min_dim( Ah ), FLA_TOP );              \
                                                                         \
     FLA_Bidiag_UT_create_T( A2, &T, NULL );                             \
-    FLA_Set( FLA_ZERO, T );                                             \
+    FLASH_Set( FLA_ZERO, T );                                           \
     FLA_Part_1x2( T, &TL, &TR, FLA_Obj_length( t ), FLA_LEFT );         \
     FLA_Accum_T_UT( FLA_FORWARD, FLA_COLUMNWISE, Ah, t, TL );           \
   } else {/*( *vect == 'P' )          V */                              \
-    FLA_Part_1x2( ATL, &A1, &A2, ( uplo == FLA_UPPER_TRIANGULAR ), FLA_LEFT ); \
+    FLA_Part_1x2( ATL, &A1,                                             \
+                  &A2, ( uplo == FLA_UPPER_TRIANGULAR ), FLA_LEFT );    \
     FLA_Merge_1x2( A2, ATR, &Ah );                                      \
     FLA_Merge_1x2( ATL, ATR, &A2 );                                     \
     FLA_Part_2x1( t, &t,                                                \
                      &T, FLA_Obj_min_dim( Ah ), FLA_TOP );              \
                                                                         \
     FLA_Bidiag_UT_create_T( A2, NULL, &T );                             \
-    FLA_Set( FLA_ZERO, T );                                             \
+    FLASH_Set( FLA_ZERO, T );                                           \
     FLA_Part_1x2( T, &TL, &TR, FLA_Obj_length( t ), FLA_LEFT );         \
     FLA_Accum_T_UT( FLA_FORWARD, FLA_ROWWISE, Ah, t, TL );              \
   }                                                                     \
@@ -115,12 +126,12 @@
     FLA_Obj d2, e2, rL, rR;                                             \
                                                                         \
     /* Temporary vectors to store diagonal and subdiagonal */           \
-    FLA_Obj_create( datatype, m_t, 1, 0, 0, &d2 );                      \
-    if ( m_t > 1 ) FLA_Obj_create( datatype, m_t - 1, 1, 0, 0, &e2 );   \
+    FLASH_Obj_create( datatype, m_t, 1, 0, 0, &d2 );                    \
+    if ( m_t > 1 ) FLASH_Obj_create( datatype, m_t - 1, 1, 0, 0, &e2 ); \
                                                                         \
     /* Temporary vectors to store realifying transformation */          \
-    FLA_Obj_create( datatype, m_t, 1, 0, 0, &rL );                      \
-    FLA_Obj_create( datatype, m_t, 1, 0, 0, &rR );                      \
+    FLASH_Obj_create( datatype, m_t, 1, 0, 0, &rL );                    \
+    FLASH_Obj_create( datatype, m_t, 1, 0, 0, &rR );                    \
                                                                         \
     /* Extract diagonals (complex) and realify them. */                 \
     /* This is tricky as the shape of A is explicitly */                \
@@ -131,7 +142,7 @@
       FLA_Bidiag_UT_l_extract_diagonals( A2, d2, e2 );                  \
     FLA_Bidiag_UT_realify_diagonals( uplo, d2, e2, rL, rR );            \
                                                                         \
-    if        ( *vect == 'Q' ) {                                        \
+    if ( *vect == 'Q' ) {                                               \
       /* Overwrite A to compute Q */                                    \
       FLA_Bidiag_UT_form_U_ext( uplo, A, T, FLA_NO_TRANSPOSE, A );      \
                                                                         \
@@ -146,21 +157,21 @@
     }                                                                   \
                                                                         \
     /* Clean up */                                                      \
-    FLA_Obj_free( &rR );                                                \
-    FLA_Obj_free( &rL );                                                \
-    if ( m_t > 1 ) FLA_Obj_free( &e2 );                                 \
-    FLA_Obj_free( &d2 );                                                \
+    FLASH_Obj_free( &rR );                                              \
+    FLASH_Obj_free( &rL );                                              \
+    if ( m_t > 1 ) FLASH_Obj_free( &e2 );                               \
+    FLASH_Obj_free( &d2 );                                              \
   } else {                                                              \
-    if        ( *vect == 'Q' ) {                                        \
+    if ( *vect == 'Q' ) {                                               \
       FLA_Bidiag_UT_form_U_ext( uplo, A, T, FLA_NO_TRANSPOSE, A );      \
     } else {/*( *vect == 'P' ) */                                       \
       FLA_Bidiag_UT_form_V_ext( uplo, A, T, FLA_CONJ_TRANSPOSE, A );    \
     }                                                                   \
   }                                                                     \
                                                                         \
-  FLA_Obj_free( &T );                                                   \
-  FLA_Obj_free_without_buffer( &t );                                    \
-  FLA_Obj_free_without_buffer( &A );                                    \
+  FLASH_Obj_free( &T );                                                 \
+  FLASH_Obj_free_without_buffer( &t );                                  \
+  FLASH_Obj_free_without_buffer( &A );                                  \
                                                                         \
   FLA_Finalize_safe( init_result );                                     \
                                                                         \

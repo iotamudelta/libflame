@@ -53,42 +53,62 @@
                                                                         \
   FLA_Init_safe( &init_result );                                        \
                                                                         \
-  FLA_Obj_create_without_buffer( datatype, *m, *n, &A );                \
-  FLA_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                      \
+  FLASH_Obj_create_without_buffer( datatype,                            \
+                                   *m,                                  \
+                                   *n,                                  \
+                                   FLASH_depth,                         \
+                                   FLASH_blocksize,                     \
+                                   &A );                                \
+  FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                    \
                                                                         \
-  FLA_Obj_create_without_buffer( datatype, min_m_n, 1, &t );            \
-  FLA_Obj_attach_buffer( buff_t, 1, min_m_n, &t );                      \
-  FLA_Set( FLA_ZERO, t );                                               \
+  FLASH_Obj_create_without_buffer( datatype,                            \
+                                   min_m_n,                             \
+                                   1,                                   \
+                                   FLASH_depth,                         \
+                                   FLASH_blocksize,                     \
+                                   &t );                                \
+  FLASH_Obj_attach_buffer( buff_t, 1, min_m_n, &t );                    \
+  FLASH_Set( FLA_ZERO, t );                                             \
                                                                         \
-  FLA_Obj_create_without_buffer( PREFIX2FLAME_REALTYPE(prefix), *n, 1, &w ); \
-  FLA_Obj_attach_buffer( buff_w, 1, *n, &w );                           \
+  FLASH_Obj_create_without_buffer( PREFIX2FLAME_REALTYPE(prefix),       \
+                                   *n,                                  \
+                                   1,                                   \
+                                   FLASH_depth,                         \
+                                   FLASH_blocksize,                     \
+                                   &w );                                \
+  FLASH_Obj_attach_buffer( buff_w, 1, *n, &w );                         \
                                                                         \
   /* LAPACK pivot storage */                                            \
-  FLA_Obj_create_without_buffer( FLA_INT, *n, 1, &jpiv );               \
-  FLA_Obj_attach_buffer( buff_p, 1, *n, &jpiv );                        \
+  FLASH_Obj_create_without_buffer( FLA_INT,                             \
+                                   *n,                                  \
+                                   1,                                   \
+                                   FLASH_depth,                         \
+                                   FLASH_blocksize,                     \
+                                   &jpiv );                             \
+  FLASH_Obj_attach_buffer( buff_p, 1, *n, &jpiv );                      \
                                                                         \
   /* FLAME pivot storage */                                             \
-  FLA_Obj_create( FLA_INT, *n, 1, 0, 0, &p );                           \
-  FLA_Set( FLA_ZERO, p );                                               \
+  FLASH_Obj_create( FLA_INT, *n, 1, 0, 0, &p );                         \
+  FLASH_Set( FLA_ZERO, p );                                             \
                                                                         \
   /* QR_UT_piv */                                                       \
   FLA_QR_UT_create_T( A, &T );                                          \
-  FLA_Set( FLA_ZERO, T );                                               \
+  FLASH_Set( FLA_ZERO, T );                                             \
                                                                         \
   FLA_QR_UT_piv( A, T, w, p );                                          \
   FLA_QR_UT_recover_tau( T, t );                                        \
   PREFIX2FLAME_INVERT_TAU(prefix,t);                                    \
                                                                         \
   /* Transform FLAME column pivots to LAPACK pivots */                  \
-  FLA_Apply_pivots( FLA_LEFT, FLA_NO_TRANSPOSE, p, jpiv );              \
+  FLASH_Apply_pivots( FLA_LEFT, FLA_NO_TRANSPOSE, p, jpiv );            \
                                                                         \
   /* Cleaning */                                                        \
-  FLA_Obj_free_without_buffer( &A );                                    \
-  FLA_Obj_free_without_buffer( &t );                                    \
-  FLA_Obj_free_without_buffer( &w );                                    \
-  FLA_Obj_free_without_buffer( &jpiv );                                 \
-  FLA_Obj_free( &p );                                                   \
-  FLA_Obj_free( &T );                                                   \
+  FLASH_Obj_free_without_buffer( &A );                                  \
+  FLASH_Obj_free_without_buffer( &t );                                  \
+  FLASH_Obj_free_without_buffer( &w );                                  \
+  FLASH_Obj_free_without_buffer( &jpiv );                               \
+  FLASH_Obj_free( &p );                                                 \
+  FLASH_Obj_free( &T );                                                 \
                                                                         \
   FLA_Finalize_safe( init_result );                                     \
                                                                         \

@@ -36,16 +36,16 @@
    FLAME does not check what LAPACK does. So, let's exclude at this moment.
 */
 
-#define LAPACK_trsyl(prefix)                                            \
-  int F77_ ## prefix ## trsyl( char* transa,                            \
-                               char* transb,                            \
-                               int* sgn,                                \
-                               int* m,                                  \
-                               int* n,                                  \
+#define LAPACK_trsyl(prefix)                                                       \
+  int F77_ ## prefix ## trsyl( char* transa,                                       \
+                               char* transb,                                       \
+                               int* sgn,                                           \
+                               int* m,                                             \
+                               int* n,                                             \
                                PREFIX2LAPACK_TYPEDEF(prefix)* buff_A, int* ldim_A, \
                                PREFIX2LAPACK_TYPEDEF(prefix)* buff_B, int* ldim_B, \
                                PREFIX2LAPACK_TYPEDEF(prefix)* buff_C, int* ldim_C, \
-                               PREFIX2LAPACK_REALDEF(prefix)* scale,          \
+                               PREFIX2LAPACK_REALDEF(prefix)* scale,               \
                                int* info )
 
 #define LAPACK_trsyl_body(prefix, srname)                       \
@@ -59,40 +59,66 @@
   FLA_Error    e_val;                                           \
   FLA_Error    init_result;                                     \
                                                                 \
-  LAPACK_trsyl_op_check(prefix,srname)                                 \
-                                                                       \
-  FLA_Init_safe( &init_result );                                       \
-                                                                       \
-  FLA_Param_map_netlib_to_flame_trans( transa, &transa_fla );          \
-  FLA_Param_map_netlib_to_flame_trans( transb, &transb_fla );          \
-                                                                       \
-  if ( *sgn == 1 ) sgn_fla = FLA_ONE;                                  \
-  else             sgn_fla = FLA_MINUS_ONE;                            \
-                                                                       \
-  FLA_Obj_create_without_buffer( datatype, *m, *m, &A );               \
-  FLA_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                     \
-                                                                       \
-  FLA_Obj_create_without_buffer( datatype, *n, *n, &B );               \
-  FLA_Obj_attach_buffer( buff_B, 1, *ldim_B, &B );                     \
-                                                                       \
-  FLA_Obj_create_without_buffer( datatype, *m, *n, &C );                \
-  FLA_Obj_attach_buffer( buff_C, 1, *ldim_C, &C );                      \
-                                                                        \
-  FLA_Obj_create_without_buffer( datatype_scale, 1, 1, &scale_fla );    \
-  FLA_Obj_attach_buffer( &scale, 1, 1, &scale_fla );                    \
-                                                                        \
-  e_val = FLA_Sylv( transa_fla, transb_fla, sgn_fla, A, B, C, scale_fla ); \
-                                                                        \
-  FLA_Obj_free_without_buffer( &A );                                    \
-  FLA_Obj_free_without_buffer( &B );                                    \
-  FLA_Obj_free_without_buffer( &C );                                    \
-  FLA_Obj_free_without_buffer( &scale_fla );                            \
-                                                                        \
-  FLA_Finalize_safe( init_result );                                     \
-                                                                        \
-  if ( e_val != FLA_SUCCESS ) *info = 1;                                \
-  else                        *info = 0;                                \
-                                                                        \
+  LAPACK_trsyl_op_check(prefix,srname)                          \
+                                                                \
+  FLA_Init_safe( &init_result );                                \
+                                                                \
+  FLA_Param_map_netlib_to_flame_trans( transa, &transa_fla );   \
+  FLA_Param_map_netlib_to_flame_trans( transb, &transb_fla );   \
+                                                                \
+  if ( *sgn == 1 ) sgn_fla = FLA_ONE;                           \
+  else             sgn_fla = FLA_MINUS_ONE;                     \
+                                                                \
+  FLASH_Obj_create_without_buffer( datatype,                    \
+                                   *m,                          \
+                                   *m,                          \
+                                   FLASH_depth,                 \
+                                   FLASH_blocksize,             \
+                                   &A );                        \
+  FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );            \
+                                                                \
+  FLASH_Obj_create_without_buffer( datatype,                    \
+                                   *n,                          \
+                                   *n,                          \
+                                   FLASH_depth,                 \
+                                   FLASH_blocksize,             \
+                                   &B );                        \
+  FLASH_Obj_attach_buffer( buff_B, 1, *ldim_B, &B );            \
+                                                                \
+  FLASH_Obj_create_without_buffer( datatype,                    \
+                                   *m,                          \
+                                   *n,                          \
+                                   FLASH_depth,                 \
+                                   FLASH_blocksize,             \
+                                   &C );                        \
+  FLASH_Obj_attach_buffer( buff_C, 1, *ldim_C, &C );            \
+                                                                \
+  FLASH_Obj_create_without_buffer( datatype_scale,              \
+                                   1,                           \
+                                   1,                           \
+                                   FLASH_depth,                 \
+                                   FLASH_blocksize,             \
+                                   &scale_fla );                \
+  FLASH_Obj_attach_buffer( &scale, 1, 1, &scale_fla );          \
+                                                                \
+  e_val = FLASH_Sylv( transa_fla,                               \
+                      transb_fla,                               \
+                      sgn_fla,                                  \
+                      A,                                        \
+                      B,                                        \
+                      C,                                        \
+                      scale_fla );                              \
+                                                                \
+  FLASH_Obj_free_without_buffer( &A );                          \
+  FLASH_Obj_free_without_buffer( &B );                          \
+  FLASH_Obj_free_without_buffer( &C );                          \
+  FLASH_Obj_free_without_buffer( &scale_fla );                  \
+                                                                \
+  FLA_Finalize_safe( init_result );                             \
+                                                                \
+  if ( e_val != FLA_SUCCESS ) *info = 1;                        \
+  else                        *info = 0;                        \
+                                                                \
   return 0;
 
 

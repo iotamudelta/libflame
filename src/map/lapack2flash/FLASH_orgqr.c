@@ -26,48 +26,55 @@
   as returned by SGEQRF.
 */
 
-#define LAPACK_orgqr(prefix, name)                                      \
-  int F77_ ## prefix ## name ## qr( int* m,                             \
-                                    int* n,                             \
-                                    int* k,                             \
-                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_A, \
-                                    int* ldim_A,                        \
-                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_t, \
-                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_w, \
-                                    int* lwork,                         \
+#define LAPACK_orgqr(prefix, name)                                          \
+  int F77_ ## prefix ## name ## qr( int* m,                                 \
+                                    int* n,                                 \
+                                    int* k,                                 \
+                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_A,  \
+                                    int* ldim_A,                            \
+                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_t,  \
+                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_w,  \
+                                    int* lwork,                             \
                                     int* info)
 
 #define LAPACK_orgqr_body(prefix)                                       \
-  FLA_Datatype datatype   = PREFIX2FLAME_DATATYPE(prefix);              \
+  FLA_Datatype datatype = PREFIX2FLAME_DATATYPE(prefix);                \
   FLA_Obj      A, AL, AR, t, T;                                         \
   FLA_Error    init_result;                                             \
                                                                         \
   FLA_Init_safe( &init_result );                                        \
                                                                         \
-  FLA_Obj_create_without_buffer( datatype, *m, *n, &A );                \
-  FLA_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                      \
+  FLASH_Obj_create_without_buffer( datatype,                            \
+                                   *m,                                  \
+                                   *n,                                  \
+                                   FLASH_depth,                         \
+                                   FLASH_blocksize,                     \
+                                   &A );                                \
+  FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                    \
                                                                         \
-  if ( *k > 0 && !( PREFIX2FLAME_IS_ZERO(prefix, buff_t) ) )        \
-    {                                                                   \
-      FLA_Obj_create_without_buffer( datatype, *k, 1, &t );             \
-      FLA_Obj_attach_buffer( buff_t, 1, *k, &t );                       \
-      PREFIX2FLAME_INVERT_TAU(prefix,t);                                \
+  if ( *k > 0 && !( PREFIX2FLAME_IS_ZERO(prefix, buff_t) ) ) {          \
+    FLASH_Obj_create_without_buffer( datatype,                          \
+                                     *k,                                \
+                                     1,                                 \
+                                     FLASH_depth,                       \
+                                     FLASH_blocksize,                   \
+                                     &t );                              \
+    FLASH_Obj_attach_buffer( buff_t, 1, *k, &t );                       \
+    PREFIX2FLAME_INVERT_TAU(prefix,t);                                  \
                                                                         \
-      FLA_Part_1x2( A, &AL, &AR, *k, FLA_LEFT );                        \
-      FLA_QR_UT_create_T( AL, &T );                                     \
-      FLA_Set( FLA_ZERO, T );                                           \
-      FLA_Accum_T_UT( FLA_FORWARD, FLA_COLUMNWISE, AL, t, T );          \
-      FLA_QR_UT_form_Q( AL, T, A );                                     \
+    FLA_Part_1x2( A, &AL, &AR, *k, FLA_LEFT );                          \
+    FLA_QR_UT_create_T( AL, &T );                                       \
+    FLASH_Set( FLA_ZERO, T );                                           \
+    FLA_Accum_T_UT( FLA_FORWARD, FLA_COLUMNWISE, AL, t, T );            \
+    FLA_QR_UT_form_Q( AL, T, A );                                       \
                                                                         \
-      PREFIX2FLAME_INVERT_TAU(prefix,t);                                \
-      FLA_Obj_free_without_buffer( &t );                                \
-      FLA_Obj_free( &T );                                               \
-    }                                                                   \
-  else                                                                  \
-    {                                                                   \
-      FLA_Set_to_identity( A );                                         \
-    }                                                                   \
-  FLA_Obj_free_without_buffer( &A );                                    \
+    PREFIX2FLAME_INVERT_TAU(prefix,t);                                  \
+    FLASH_Obj_free_without_buffer( &t );                                \
+    FLASH_Obj_free( &T );                                               \
+  } else {                                                              \
+    FLA_Set_to_identity( A );                                           \
+  }                                                                     \
+  FLASH_Obj_free_without_buffer( &A );                                  \
   FLA_Finalize_safe( init_result );                                     \
                                                                         \
   *info = 0;                                                            \
@@ -130,14 +137,14 @@ LAPACK_orgqr(z, ung)
 }
 #endif
 
-#define LAPACK_org2r(prefix, name)                                      \
-  int F77_ ## prefix ## name ## 2r( int* m,                                  \
-                                    int* n,                             \
-                                    int* k,                             \
-                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_A, \
-                                    int* ldim_A,                        \
-                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_t, \
-                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_w, \
+#define LAPACK_org2r(prefix, name)                                          \
+  int F77_ ## prefix ## name ## 2r( int* m,                                 \
+                                    int* n,                                 \
+                                    int* k,                                 \
+                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_A,  \
+                                    int* ldim_A,                            \
+                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_t,  \
+                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_w,  \
                                     int* info)
 
 LAPACK_org2r(s, org)

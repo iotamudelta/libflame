@@ -21,13 +21,13 @@
   an unitary similarity transformation: Q**H * A * Q = H .
 */
 
-#define LAPACK_gehrd(prefix)                                            \
-  int F77_ ## prefix ## gehrd( int* m,                                  \
-                               int* ilo,                                \
-                               int* ihi,                                \
+#define LAPACK_gehrd(prefix)                                                       \
+  int F77_ ## prefix ## gehrd( int* m,                                             \
+                               int* ilo,                                           \
+                               int* ihi,                                           \
                                PREFIX2LAPACK_TYPEDEF(prefix)* buff_A, int* ldim_A, \
-                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_t,   \
-                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_w, int* lwork, \
+                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_t,              \
+                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_w, int* lwork,  \
                                int* info )
 
 #define LAPACK_gehrd_body(prefix)                               \
@@ -38,21 +38,31 @@
                                                                 \
   FLA_Init_safe( &init_result );                                \
                                                                 \
-  FLA_Obj_create_without_buffer( datatype, *m, *m, &A );        \
-  FLA_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );              \
+  FLASH_Obj_create_without_buffer( datatype,                    \
+                                   *m,                          \
+                                   *m,                          \
+                                   FLASH_depth,                 \
+                                   FLASH_blocksize,             \
+                                   &A );                        \
+  FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );            \
                                                                 \
-  FLA_Obj_create_without_buffer( datatype, m_t, 1, &t );        \
-  if ( m_t > 0 ) FLA_Obj_attach_buffer( buff_t, 1, m_t, &t );   \
+  FLASH_Obj_create_without_buffer( datatype,                    \
+                                   m_t,                         \
+                                   1,                           \
+                                   FLASH_depth,F                \
+                                   LASH_blocksize,              \
+                                   &t );                        \
+  if ( m_t > 0 ) FLASH_Obj_attach_buffer( buff_t, 1, m_t, &t ); \
                                                                 \
   FLA_Hess_UT_create_T( A, &T );                                \
   FLA_Hess_UT( A, T );                                          \
   FLA_Hess_UT_recover_tau( T, t );                              \
-  FLA_Obj_free( &T );                                           \
+  FLASH_Obj_free( &T );                                         \
                                                                 \
   PREFIX2FLAME_INVERT_TAU(prefix,t);                            \
-  FLA_Obj_free_without_buffer( &t );                            \
+  FLASH_Obj_free_without_buffer( &t );                          \
                                                                 \
-  FLA_Obj_free_without_buffer( &A );                            \
+  FLASH_Obj_free_without_buffer( &A );                          \
                                                                 \
   FLA_Finalize_safe( init_result );                             \
                                                                 \

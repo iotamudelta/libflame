@@ -9,25 +9,9 @@ Directory structure
 -------------------
 
 lapack2flame
-  - check               :: includes LAPACK arguments check routines.
-  - f2c
-    - c
-      + *.c             :: f2c'ed LAPACK source files.
-      + *.sh            :: shell scripts to convert LAPACK sources to C files.
-    - flamec 
-      - front           :: includes functions that are isolated from libflame.
-                           uses LAPACK native functions only.
-      - gelq            :: LAPACK gelqf related functions.  
-      - geqr            :: LAPACK geqrf related functions.
-      - hetd            :: LAPACK hetrd related functions.
-    - install
-      - static          :: LAPACK machine related functions, translated by using C99 standards. 
-                           these files are likely to be never changed even if LAPACK evolves.
-      - util            :: necessary f2c sources files; some of them are modified from original ones.
-    - netlib
-      - 3.5.0.tar       :: tar ball includes source files from LAPACK 3.5.0.
-      - support.list    :: a list of files that will not be f2c'ed. 
-                           FLA_*.c will replace those files.
+  - check               :: Symbolic link to the directory in lapack2flamec/
+  - f2c                 :: Symbolic link to the directory in lapack2flamec/
+
   + FLA_*.c             :: LAPACK interfaces that redirect functionality to libflame.
 
 

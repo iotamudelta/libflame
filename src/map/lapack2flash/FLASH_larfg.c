@@ -46,14 +46,13 @@
                                     x2,                                 \
                                     *inc_x2,                            \
                                     tau );                              \
-      /* TODO: invert tau */
-}                                                                     \
-FLA_Finalize_safe( init_result );
-\
-return 0;
+      /* TODO: invert tau */                                            \
+  }                                                                     \
+  FLA_Finalize_safe( init_result );                                     \
+  return 0;
 
 
-       LAPACK_larfg(s)
+LAPACK_larfg(s)
 {
     LAPACK_larfg_body(s)
 }

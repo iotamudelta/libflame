@@ -85,8 +85,8 @@ extern int FLAME_invert_ztau( FLA_Obj t );
 
 extern int FLAME_QR_piv_preorder( FLA_Obj A, int *jpiv_lapack, int *jpiv_fla );
 
-// TODO, Let a usser change these at run time
-#define BLOCK_SIZE 2000
-#define DEPTH_SIZE 1
+// TODO, Let a user change these at run time
+static dim_t FLASH_depth          = 1;
+static dim_t FLASH_blocksize[ 1 ] = { 2048 };
 
 #endif

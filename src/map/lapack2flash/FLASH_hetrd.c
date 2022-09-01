@@ -42,56 +42,76 @@
   holder vectors backward) is required.
 */
 
-#define LAPACK_hetrd(prefix, name)                                      \
-  int F77_ ## prefix ## name ## trd( char* uplo,                        \
-                                     int*  m,                           \
+#define LAPACK_hetrd(prefix, name)                                                       \
+  int F77_ ## prefix ## name ## trd( char* uplo,                                         \
+                                     int*  m,                                            \
                                      PREFIX2LAPACK_TYPEDEF(prefix)* buff_A, int* ldim_A, \
-                                     PREFIX2LAPACK_REALDEF(prefix)* buff_d, \
-                                     PREFIX2LAPACK_REALDEF(prefix)* buff_e, \
-                                     PREFIX2LAPACK_TYPEDEF(prefix)* buff_t, \
-                                     PREFIX2LAPACK_TYPEDEF(prefix)* buff_w, int* lwork, \
+                                     PREFIX2LAPACK_REALDEF(prefix)* buff_d,              \
+                                     PREFIX2LAPACK_REALDEF(prefix)* buff_e,              \
+                                     PREFIX2LAPACK_TYPEDEF(prefix)* buff_t,              \
+                                     PREFIX2LAPACK_TYPEDEF(prefix)* buff_w, int* lwork,  \
                                      int*  info )
 
-#define LAPACK_hetrd_body(prefix)                                     \
-  FLA_Datatype datatype = PREFIX2FLAME_DATATYPE(prefix);              \
-  FLA_Datatype dtype_re = PREFIX2FLAME_REALTYPE(prefix);              \
-  dim_t        m_d      = *m;                                         \
-  dim_t        m_e      = m_d - 1;                                    \
-  FLA_Uplo     uplo_fla;                                              \
-  FLA_Obj      A, d, e, t, T;                                         \
-  FLA_Error    init_result;                                           \
-                                                                      \
-  FLA_Init_safe( &init_result );                                      \
-                                                                      \
-  FLA_Param_map_netlib_to_flame_uplo( uplo, &uplo_fla );              \
-                                                                      \
-  FLA_Obj_create_without_buffer( datatype, *m, *m, &A );              \
-  FLA_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                    \
-                                                                      \
-  FLA_Obj_create_without_buffer( dtype_re, m_d, 1, &d );              \
-  FLA_Obj_attach_buffer( buff_d, 1, m_d, &d );                        \
-                                                                      \
-  if ( m_e > 0 ) {                                                      \
-    FLA_Obj_create_without_buffer( dtype_re, m_e, 1, &e );              \
-    FLA_Obj_attach_buffer( buff_e, 1, m_e, &e );                        \
+#define LAPACK_hetrd_body(prefix)                                       \
+  FLA_Datatype datatype = PREFIX2FLAME_DATATYPE(prefix);                \
+  FLA_Datatype dtype_re = PREFIX2FLAME_REALTYPE(prefix);                \
+  dim_t        m_d      = *m;                                           \
+  dim_t        m_e      = m_d - 1;                                      \
+  FLA_Uplo     uplo_fla;                                                \
+  FLA_Obj      A, d, e, t, T;                                           \
+  FLA_Error    init_result;                                             \
                                                                         \
-    FLA_Obj_create_without_buffer( datatype, m_e, 1, &t );              \
-    FLA_Obj_attach_buffer( buff_t, 1, m_e, &t );                        \
+  FLA_Init_safe( &init_result );                                        \
+                                                                        \
+  FLA_Param_map_netlib_to_flame_uplo( uplo, &uplo_fla );                \
+                                                                        \
+  FLASH_Obj_create_without_buffer( datatype,                            \
+                                   *m,                                  \
+                                   *m,                                  \
+                                   FLASH_depth,                         \
+                                   FLASH_blocksize,                     \
+                                   &A );                                \
+  FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                    \
+                                                                        \
+  FLASH_Obj_create_without_buffer( dtype_re,                            \
+                                   m_d,                                 \
+                                   1,                                   \
+                                   FLASH_depth,                         \
+                                   FLASH_blocksize,                     \
+                                   &d );                                \
+  FLASH_Obj_attach_buffer( buff_d, 1, m_d, &d );                        \
+                                                                        \
+  if ( m_e > 0 ) {                                                      \
+    FLASH_Obj_create_without_buffer( dtype_re,                          \
+                                     m_e,                               \
+                                     1,                                 \
+                                     FLASH_depth,                       \
+                                     FLASH_blocksize,                   \
+                                     &e );                              \
+    FLASH_Obj_attach_buffer( buff_e, 1, m_e, &e );                      \
+                                                                        \
+    FLASH_Obj_create_without_buffer( datatype,                          \
+                                     m_e,                               \
+                                     1,                                 \
+                                     FLASH_depth,                       \
+                                     FLASH_blocksize,                   \
+                                     &t );                              \
+    FLASH_Obj_attach_buffer( buff_t, 1, m_e, &t );                      \
   }                                                                     \
                                                                         \
   FLA_Tridiag_UT_create_T( A, &T );                                     \
-  FLA_Set( FLA_ZERO, T );                                               \
+  FLASH_Set( FLA_ZERO, T );                                             \
   FLA_Tridiag_UT( uplo_fla, A, T );                                     \
                                                                         \
   if ( FLA_Obj_is_complex( A ) == TRUE && m_e > 0 ) {                   \
     FLA_Obj d2, e2, r;                                                  \
                                                                         \
     /* Temporary vectors to store the subidagonal */                    \
-    FLA_Obj_create( datatype, m_d, 1, 0, 0, &d2 );                      \
-    FLA_Obj_create( datatype, m_e, 1, 0, 0, &e2 );                      \
+    FLASH_Obj_create( datatype, m_d, 1, 0, 0, &d2 );                    \
+    FLASH_Obj_create( datatype, m_e, 1, 0, 0, &e2 );                    \
                                                                         \
     /* Temporary vectors to store realifying transformation */          \
-    FLA_Obj_create( datatype, m_d, 1, 0, 0, &r );                       \
+    FLASH_Obj_create( datatype, m_d, 1, 0, 0, &r );                     \
                                                                         \
     /* Do not touch factors in A */                                     \
     FLA_Tridiag_UT_extract_diagonals( uplo_fla, A, d2, e2 );            \
@@ -101,9 +121,9 @@
     FLA_Obj_extract_real_part( e2, e );                                 \
                                                                         \
     /* Clean up */                                                      \
-    FLA_Obj_free( &r  );                                                \
-    FLA_Obj_free( &e2 );                                                \
-    FLA_Obj_free( &d2 );                                                \
+    FLASH_Obj_free( &r  );                                              \
+    FLASH_Obj_free( &e2 );                                              \
+    FLASH_Obj_free( &d2 );                                              \
   } else {                                                              \
     FLA_Tridiag_UT_extract_real_diagonals( uplo_fla, A, d, e );         \
   }                                                                     \
@@ -112,14 +132,14 @@
     FLA_Tridiag_UT_recover_tau( T, t );                                 \
     PREFIX2FLAME_INVERT_TAU(prefix,t);                                  \
   }                                                                     \
-  FLA_Obj_free( &T );                                                   \
+  FLASH_Obj_free( &T );                                                 \
                                                                         \
   if ( m_e > 0 ) {                                                      \
-    FLA_Obj_free_without_buffer( &e );                                  \
-    FLA_Obj_free_without_buffer( &t );                                  \
+    FLASH_Obj_free_without_buffer( &e );                                \
+    FLASH_Obj_free_without_buffer( &t );                                \
   }                                                                     \
-  FLA_Obj_free_without_buffer( &d );                                    \
-  FLA_Obj_free_without_buffer( &A );                                    \
+  FLASH_Obj_free_without_buffer( &d );                                  \
+  FLASH_Obj_free_without_buffer( &A );                                  \
                                                                         \
   FLA_Finalize_safe( init_result );                                     \
                                                                         \

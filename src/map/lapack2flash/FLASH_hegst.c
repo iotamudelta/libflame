@@ -21,10 +21,10 @@
   eigenproblem to standard form.
 */
 
-#define LAPACK_hegst(prefix, name)                                      \
-  int F77_ ## prefix ## name ## gst( int*  itype,                       \
-                                     char* uplo,                        \
-                                     int*  m,                           \
+#define LAPACK_hegst(prefix, name)                                                       \
+  int F77_ ## prefix ## name ## gst( int*  itype,                                        \
+                                     char* uplo,                                         \
+                                     int*  m,                                            \
                                      PREFIX2LAPACK_TYPEDEF(prefix)* buff_A, int* ldim_A, \
                                      PREFIX2LAPACK_TYPEDEF(prefix)* buff_B, int* ldim_B, \
                                      int*  info )
@@ -41,16 +41,26 @@
   FLA_Param_map_netlib_to_flame_inv( itype, &inv_fla );         \
   FLA_Param_map_netlib_to_flame_uplo( uplo, &uplo_fla );        \
                                                                 \
-  FLA_Obj_create_without_buffer( datatype, *m, *m, &A );        \
-  FLA_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );              \
+  FLASH_Obj_create_without_buffer( datatype,                    \
+                                   *m,                          \
+                                   *m,                          \
+                                   FLASH_depth,                 \
+                                   FLASH_blocksize,             \
+                                   &A );                        \
+  FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );            \
                                                                 \
-  FLA_Obj_create_without_buffer( datatype, *m, *m, &B );        \
-  FLA_Obj_attach_buffer( buff_B, 1, *ldim_B, &B );              \
+  FLASH_Obj_create_without_buffer( datatype,                    \
+                                   *m,                          \
+                                   *m,                          \
+                                   FLASH_depth,                 \
+                                   FLASH_blocksize,             \
+                                   &B );                        \
+  FLASH_Obj_attach_buffer( buff_B, 1, *ldim_B, &B );            \
                                                                 \
-  FLA_Eig_gest( inv_fla, uplo_fla, A, B );                      \
+  FLASH_Eig_gest( inv_fla, uplo_fla, A, B );                    \
                                                                 \
-  FLA_Obj_free_without_buffer( &A );                            \
-  FLA_Obj_free_without_buffer( &B );                            \
+  FLASH_Obj_free_without_buffer( &A );                          \
+  FLASH_Obj_free_without_buffer( &B );                          \
                                                                 \
   FLA_Finalize_safe( init_result );                             \
                                                                 \

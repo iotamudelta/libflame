@@ -31,16 +31,16 @@
   if SIDE = 'R'.
 */
 
-#define LAPACK_ormlq(prefix, name)                                      \
-  int F77_ ## prefix ## name ## lq( char* side,                         \
-                                    char* trans,                        \
-                                    int* m,                             \
-                                    int* n,                             \
-                                    int* k,                             \
+#define LAPACK_ormlq(prefix, name)                                                      \
+  int F77_ ## prefix ## name ## lq( char* side,                                         \
+                                    char* trans,                                        \
+                                    int* m,                                             \
+                                    int* n,                                             \
+                                    int* k,                                             \
                                     PREFIX2LAPACK_TYPEDEF(prefix)* buff_A, int* ldim_A, \
-                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_t, \
+                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_t,              \
                                     PREFIX2LAPACK_TYPEDEF(prefix)* buff_B, int* ldim_B, \
-                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_w, int* lwork, \
+                                    PREFIX2LAPACK_TYPEDEF(prefix)* buff_w, int* lwork,  \
                                     int* info )
 
 #define LAPACK_ormlq_body(prefix)                                       \
@@ -61,31 +61,46 @@
   if ( *k > 0 && !( PREFIX2FLAME_IS_ZERO(prefix, buff_t) ) )            \
     {                                                                   \
       FLA_Obj      A, t, B, T, W;                                       \
-      FLA_Obj_create_without_buffer( datatype, *k, nq, &A );            \
-      FLA_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                  \
+      FLASH_Obj_create_without_buffer( datatype,                        \
+                                       *k,                              \
+                                       nq,                              \
+                                       FLASH_depth,                     \
+                                       FLASH_blocksize,                 \
+                                       &A );                            \
+      FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                \
                                                                         \
-      FLA_Obj_create_without_buffer( datatype, *m, *n, &B );            \
-      FLA_Obj_attach_buffer( buff_B, 1, *ldim_B, &B );                  \
+      FLASH_Obj_create_without_buffer( datatype,                        \
+                                       *m,                              \
+                                       *n,                              \
+                                       FLASH_depth,                     \
+                                       FLASH_blocksize,                 \
+                                       &B );                            \
+      FLASH_Obj_attach_buffer( buff_B, 1, *ldim_B, &B );                \
                                                                         \
-      FLA_Obj_create_without_buffer( datatype, *k, 1, &t );             \
-      FLA_Obj_attach_buffer( buff_t, 1, *k, &t );                       \
+      FLASH_Obj_create_without_buffer( datatype,                        \
+                                       *k,                              \
+                                       1,                               \
+                                       FLASH_depth,                     \
+                                       FLASH_blocksize,                 \
+                                       &t );                            \
+      FLASH_Obj_attach_buffer( buff_t, 1, *k, &t );                     \
       PREFIX2FLAME_INVERT_TAU(prefix,t);                                \
                                                                         \
       FLA_LQ_UT_create_T( A, &T );                                      \
-      FLA_Set( FLA_ZERO, T );                                           \
+      FLASH_Set( FLA_ZERO, T );                                         \
       FLA_Apply_Q_UT_create_workspace_side( side_fla, T, B, &W);        \
                                                                         \
       FLA_Accum_T_UT( FLA_FORWARD, FLA_ROWWISE, A, t, T );              \
-      FLA_Apply_Q_UT( side_fla, trans_fla, FLA_BACKWARD, FLA_ROWWISE,   \
+      FLASH_Apply_Q_UT( side_fla, trans_fla, FLA_BACKWARD, FLA_ROWWISE, \
                       A, T, W, B );                                     \
                                                                         \
-      FLA_Obj_free( &W );                                               \
-      FLA_Obj_free( &T );                                               \
+      FLASH_Obj_free( &W );                                             \
+      FLASH_Obj_free( &T );                                             \
                                                                         \
       PREFIX2FLAME_INVERT_TAU(prefix,t);                                \
-      FLA_Obj_free_without_buffer( &t );                                \
-      FLA_Obj_free_without_buffer( &B );                                \
-      FLA_Obj_free_without_buffer( &A );                                \
+      FLASH_Obj_free_without_buffer( &t );                              \
+      FLASH_Obj_free_without_buffer( &B );                              \
+      FLASH_Obj_free_without_buffer( &A );                              \
     }                                                                   \
   FLA_Finalize_safe( init_result );                                     \
                                                                         \

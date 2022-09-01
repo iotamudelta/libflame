@@ -31,29 +31,29 @@
   Note that the routine returns V**T, not V.
 */
 
-#define LAPACK_gesvd_real(prefix)                                       \
-  int F77_ ## prefix ## gesvd( char* jobu,                              \
-                               char* jobv,                              \
-                               int*  m,                                 \
-                               int*  n,                                 \
-                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_A,  int* ldim_A, \
-                               PREFIX2LAPACK_REALDEF(prefix)* buff_s,   \
-                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_U,  int* ldim_U, \
+#define LAPACK_gesvd_real(prefix)                                                    \
+  int F77_ ## prefix ## gesvd( char* jobu,                                           \
+                               char* jobv,                                           \
+                               int*  m,                                              \
+                               int*  n,                                              \
+                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_A,  int* ldim_A,  \
+                               PREFIX2LAPACK_REALDEF(prefix)* buff_s,                \
+                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_U,  int* ldim_U,  \
                                PREFIX2LAPACK_TYPEDEF(prefix)* buff_Vh, int* ldim_Vh, \
-                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_w,  int* lwork, \
+                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_w,  int* lwork,   \
                                int* info )
 
-#define LAPACK_gesvd_complex(prefix)                                    \
-  int F77_ ## prefix ## gesvd( char* jobu,                              \
-                               char* jobv,                              \
-                               int*  m,                                 \
-                               int*  n,                                 \
-                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_A,  int* ldim_A, \
-                               PREFIX2LAPACK_REALDEF(prefix)* buff_s,   \
-                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_U,  int* ldim_U, \
+#define LAPACK_gesvd_complex(prefix)                                                 \
+  int F77_ ## prefix ## gesvd( char* jobu,                                           \
+                               char* jobv,                                           \
+                               int*  m,                                              \
+                               int*  n,                                              \
+                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_A,  int* ldim_A,  \
+                               PREFIX2LAPACK_REALDEF(prefix)* buff_s,                \
+                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_U,  int* ldim_U,  \
                                PREFIX2LAPACK_TYPEDEF(prefix)* buff_Vh, int* ldim_Vh, \
-                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_w,  int* lwork, \
-                               PREFIX2LAPACK_REALDEF(prefix)* buff_r,   \
+                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_w,  int* lwork,   \
+                               PREFIX2LAPACK_REALDEF(prefix)* buff_r,                \
                                int* info )
 
 #define LAPACK_gesvd_body(prefix)                                       \
@@ -84,24 +84,44 @@
                jobv_fla == FLA_SVD_VECTORS_MIN_COPY );                  \
                                                                         \
   /* Given A */                                                         \
-  FLA_Obj_create_without_buffer( datatype, *m, *n, &A );                \
-  FLA_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                      \
+  FLASH_Obj_create_without_buffer( datatype,                            \
+                                   *m,                                  \
+                                   *n,                                  \
+                                   FLASH_depth,                         \
+                                   FLASH_blocksize,                     \
+                                   &A );                                \
+  FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                    \
                                                                         \
   /* Singular values are stored in s */                                 \
-  FLA_Obj_create_without_buffer( dtype_re, min_m_n, 1, &s );            \
-  FLA_Obj_attach_buffer( buff_s, 1, min_m_n, &s );                      \
+  FLASH_Obj_create_without_buffer( dtype_re,                            \
+                                   min_m_n,                             \
+                                   1,                                   \
+                                   FLASH_depth,                         \
+                                   FLASH_blocksize,                     \
+                                   &s );                                \
+  FLASH_Obj_attach_buffer( buff_s, 1, min_m_n, &s );                    \
                                                                         \
   /* U */                                                               \
   if ( create_U ) {                                                     \
-    FLA_Obj_create_without_buffer( datatype, m_U, n_U, &U );            \
-    FLA_Obj_attach_buffer( buff_U, 1, *ldim_U, &U );                    \
+    FLASH_Obj_create_without_buffer( datatype,                          \
+                                     m_U,                               \
+                                     n_U,                               \
+                                     FLASH_depth,                       \
+                                     FLASH_blocksize,                   \
+                                     &U );                              \
+    FLASH_Obj_attach_buffer( buff_U, 1, *ldim_U, &U );                  \
   } else {                                                              \
     FLA_Obj_nullify( &U );                                              \
   }                                                                     \
   /* V^H */                                                             \
   if ( create_V ) {                                                     \
-    FLA_Obj_create_without_buffer( datatype, m_V, n_V, &V );            \
-    FLA_Obj_attach_buffer( buff_Vh, 1, *ldim_Vh, &V );                  \
+    FLASH_Obj_create_without_buffer( datatype,                          \
+                                     m_V,                               \
+                                     n_V,                               \
+                                     FLASH_depth,                       \
+                                     FLASH_blocksize,                   \
+                                     &V );                              \
+    FLASH_Obj_attach_buffer( buff_Vh, 1, *ldim_Vh, &V );                \
   } else {                                                              \
     FLA_Obj_nullify( &V );                                              \
   }                                                                     \
@@ -111,11 +131,11 @@
                        A, s, U, V );                                    \
                                                                         \
   /* Clean up */                                                        \
-  if ( create_U ) FLA_Obj_free_without_buffer( &U );                    \
-  if ( create_V ) FLA_Obj_free_without_buffer( &V );                    \
+  if ( create_U ) FLASH_Obj_free_without_buffer( &U );                  \
+  if ( create_V ) FLASH_Obj_free_without_buffer( &V );                  \
                                                                         \
-  FLA_Obj_free_without_buffer( &A );                                    \
-  FLA_Obj_free_without_buffer( &s );                                    \
+  FLASH_Obj_free_without_buffer( &A );                                  \
+  FLASH_Obj_free_without_buffer( &s );                                  \
                                                                         \
   FLA_Finalize_safe( init_result );                                     \
   *info = 0;                                                            \

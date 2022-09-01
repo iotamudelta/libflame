@@ -44,18 +44,18 @@
   GREGORIO QUINTANA-ORT´ı, Universitat Jaume I
 */
 
-#define LAPACK_bdsqr(prefix)                                            \
-  int F77_ ## prefix ## bdsqr( char* uplo,                              \
-                               int*  m_d,                               \
-                               int*  n_Vt,                              \
-                               int*  m_U,                               \
-                               int*  n_C,                               \
-                               PREFIX2LAPACK_REALDEF(prefix)* buff_d,   \
-                               PREFIX2LAPACK_REALDEF(prefix)* buff_e,   \
+#define LAPACK_bdsqr(prefix)                                                         \
+  int F77_ ## prefix ## bdsqr( char* uplo,                                           \
+                               int*  m_d,                                            \
+                               int*  n_Vt,                                           \
+                               int*  m_U,                                            \
+                               int*  n_C,                                            \
+                               PREFIX2LAPACK_REALDEF(prefix)* buff_d,                \
+                               PREFIX2LAPACK_REALDEF(prefix)* buff_e,                \
                                PREFIX2LAPACK_TYPEDEF(prefix)* buff_Vt, int* ldim_Vt, \
-                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_U,  int* ldim_U, \
-                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_C,  int* ldim_C, \
-                               PREFIX2LAPACK_REALDEF(prefix)* rwork,    \
+                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_U,  int* ldim_U,  \
+                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_C,  int* ldim_C,  \
+                               PREFIX2LAPACK_REALDEF(prefix)* rwork,                 \
                                int*  info )
 
 #define LAPACK_bdsqr_body(prefix)                                       \
@@ -72,23 +72,43 @@
   FLA_Param_map_netlib_to_flame_uplo( uplo, &uplo_fla );                \
                                                                         \
   /* Create diagonals */                                                \
-  FLA_Obj_create_without_buffer( dtype_re, *m_d, 1, &d );               \
-  FLA_Obj_attach_buffer( buff_d, 1, *m_d, &d );                         \
+  FLASH_Obj_create_without_buffer( dtype_re,                            \
+                                   *m_d,                                \
+                                   1,                                   \
+                                   FLASH_depth,                         \
+                                   FLASH_blocksize,                     \
+                                   &d );                                \
+  FLASH_Obj_attach_buffer( buff_d, 1, *m_d, &d );                       \
   if ( *m_d > 1 ) {                                                     \
-    FLA_Obj_create_without_buffer( dtype_re, *m_d - 1, 1, &e );         \
-    FLA_Obj_attach_buffer( buff_d, 1, *m_d - 1, &e );                   \
+    FLASH_Obj_create_without_buffer( dtype_re,                          \
+                                     *m_d - 1,                          \
+                                     1,                                 \
+                                     FLASH_depth,                       \
+                                     FLASH_blocksize,                   \
+                                     &e );                              \
+    FLASH_Obj_attach_buffer( buff_d, 1, *m_d - 1, &e );                 \
   }                                                                     \
   /* Create U and Vt */                                                 \
   if ( *m_U > 0 ) {                                                     \
-    FLA_Obj_create_without_buffer( datatype, *m_U, *m_d, &U  );         \
-    FLA_Obj_attach_buffer( buff_U, 1, *ldim_U, &U );                    \
+    FLASH_Obj_create_without_buffer( datatype,                          \
+                                     *m_U,                              \
+                                     *m_d,                              \
+                                     FLASH_depth,                       \
+                                     FLASH_blocksize,                   \
+                                     &U  );                             \
+    FLASH_Obj_attach_buffer( buff_U, 1, *ldim_U, &U );                  \
     jobu = FLA_SVD_VECTORS_ALL;                                         \
   } else {                                                              \
     jobu = FLA_SVD_VECTORS_NONE;                                        \
   }                                                                     \
   if ( *n_Vt > 0 ) {                                                    \
-    FLA_Obj_create_without_buffer( datatype, *m_d, *n_Vt, &Vt );        \
-    FLA_Obj_attach_buffer( buff_Vt, 1, *ldim_Vt, &Vt );                 \
+    FLASH_Obj_create_without_buffer( datatype,                          \
+                                     *m_d,                              \
+                                     *n_Vt,                             \
+                                     FLASH_depth,                       \
+                                     FLASH_blocksize,                   \
+                                     &Vt );                             \
+    FLASH_Obj_attach_buffer( buff_Vt, 1, *ldim_Vt, &Vt );               \
     jobv = FLA_SVD_VECTORS_ALL;                                         \
     /* V should be flipped */                                           \
     FLA_Obj_flip_base( &Vt );                                           \
@@ -97,8 +117,13 @@
     jobv = FLA_SVD_VECTORS_NONE;                                        \
   }                                                                     \
   if ( *n_C > 0 ) {                                                     \
-    FLA_Obj_create_without_buffer( datatype, *m_d, *n_C, &C );          \
-    FLA_Obj_attach_buffer( buff_C, 1, *ldim_C, &C );                    \
+    FLASH_Obj_create_without_buffer( datatype,                          \
+                                     *m_d,                              \
+                                     *n_C,                              \
+                                     FLASH_depth,                       \
+                                     FLASH_blocksize,                   \
+                                     &C );                              \
+    FLASH_Obj_attach_buffer( buff_C, 1, *ldim_C, &C );                  \
   }                                                                     \
                                                                         \
   /* Create workspace */                                                \
@@ -115,15 +140,17 @@
     /* if V is flipped abd complex, then apply conjugate */             \
     if ( FLA_Obj_is_complex( Vt ) == TRUE )                             \
       FLA_Conjugate( Vt );                                              \
-    FLA_Obj_free_without_buffer( &Vt );                                 \
+    FLASH_Obj_free_without_buffer( &Vt );                               \
   }                                                                     \
-  if ( jobu != FLA_SVD_VECTORS_NONE ) FLA_Obj_free_without_buffer( &U ); \
-  if ( *n_C > 0 )                     FLA_Obj_free_without_buffer( &C ); \
-  FLA_Obj_free( &H );                                                   \
-  FLA_Obj_free( &G );                                                   \
-  FLA_Obj_free_without_buffer( &d );                                    \
+  if ( jobu != FLA_SVD_VECTORS_NONE )                                   \
+    FLASH_Obj_free_without_buffer( &U );                                \
+  if ( *n_C > 0 )                                                       \
+    FLASH_Obj_free_without_buffer( &C );                                \
+  FLASH_Obj_free( &H );                                                 \
+  FLASH_Obj_free( &G );                                                 \
+  FLASH_Obj_free_without_buffer( &d );                                  \
   if ( *m_d > 1 )                                                       \
-    FLA_Obj_free_without_buffer( &e );                                  \
+    FLASH_Obj_free_without_buffer( &e );                                \
                                                                         \
   FLA_Finalize_safe( init_result );                                     \
                                                                         \

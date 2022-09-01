@@ -51,17 +51,17 @@
   At this moment, this routine is redirected to GELSS.
 */
 
-#define LAPACK_gelsd_real(prefix)                                       \
-  int F77_ ## prefix ## gelsd( int* m,                                  \
-                               int* n,                                  \
-                               int* nrhs,                               \
+#define LAPACK_gelsd_real(prefix)                                                  \
+  int F77_ ## prefix ## gelsd( int* m,                                             \
+                               int* n,                                             \
+                               int* nrhs,                                          \
                                PREFIX2LAPACK_TYPEDEF(prefix)* buff_A, int* ldim_A, \
                                PREFIX2LAPACK_TYPEDEF(prefix)* buff_B, int* ldim_B, \
-                               PREFIX2LAPACK_REALDEF(prefix)* buff_s,   \
-                               PREFIX2LAPACK_REALDEF(prefix)* rcond,    \
-                               int* rank,                               \
-                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_w, int* lwork, \
-                               int* iwork,                              \
+                               PREFIX2LAPACK_REALDEF(prefix)* buff_s,              \
+                               PREFIX2LAPACK_REALDEF(prefix)* rcond,               \
+                               int* rank,                                          \
+                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_w, int* lwork,  \
+                               int* iwork,                                         \
                                int* info )
 
 #define LAPACK_gelsd_real_body(prefix)                                  \
