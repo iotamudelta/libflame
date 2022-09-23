@@ -88,7 +88,7 @@
   FLASH_Obj_attach_buffer( buff_p, 1, *n, &jpiv );                      \
                                                                         \
   /* FLAME pivot storage */                                             \
-  FLASH_Obj_create( FLA_INT, *n, 1, 0, 0, &p );                         \
+  FLASH_Obj_create( FLA_INT, *n, 1, FLASH_depth, &FLASH_blocksize, &p );\
   FLASH_Set( FLA_ZERO, p );                                             \
                                                                         \
   /* QR_UT_piv */                                                       \

@@ -96,7 +96,12 @@ extern fla_bidiagut_t* fla_bidiagut_cntl_plain;
                                    &tv );                               \
   FLASH_Obj_attach_buffer( buff_tv, 1, m_t, &tv );                      \
                                                                         \
-  FLASH_Obj_create( dtype_re, 1, 1, 0, 0, &alpha );                     \
+  FLASH_Obj_create( dtype_re,                                           \
+                    1,                                                  \
+                    1,                                                  \
+                    FLASH_depth,                                        \
+                    &FLASH_blocksize,                                   \
+                    &alpha );                                           \
   FLA_Max_abs_value( A, alpha );                                        \
                                                                         \
   apply_scale =                                                         \
@@ -107,7 +112,8 @@ extern fla_bidiagut_t* fla_bidiagut_cntl_plain;
     FLASH_Scal( apply_scale > 0 ? FLA_SAFE_MIN : FLA_SAFE_INV_MIN, A ); \
                                                                         \
   FLA_Bidiag_UT_create_T( A, &TU, &TV );                                \
-  FLASH_Set( FLA_ZERO, TU );FLA_Set( FLA_ZERO, TV );                    \
+  FLASH_Set( FLA_ZERO, TU );                                            \
+  FLASH_Set( FLA_ZERO, TV );                                            \
                                                                         \
   FLA_Bidiag_UT_internal( A, TU, TV, fla_bidiagut_cntl_plain );         \
                                                                         \
@@ -118,12 +124,32 @@ extern fla_bidiagut_t* fla_bidiagut_cntl_plain;
     FLA_Obj d2, e2, rL, rR;                                             \
                                                                         \
     /* Temporary vectors to store diagonal and subdiagonal */           \
-    FLASH_Obj_create( datatype, m_d, 1, 0, 0, &d2 );                    \
-    if ( m_e > 0 ) FLA_Obj_create( datatype, m_e, 1, 0, 0, &e2 );       \
+    FLASH_Obj_create( datatype,                                         \
+                      m_d,                                              \
+                      1,                                                \
+                      FLASH_depth,                                      \
+                      &FLASH_blocksize,                                 \
+                      &d2 );                                            \
+    if ( m_e > 0 ) FLA_Obj_create( datatype,                            \
+                                   m_e,                                 \
+                                   1,                                   \
+                                   FLASH_depth,                         \
+                                   &FLASH_blocksize,                    \
+                                   &e2 );                               \
                                                                         \
     /* Temporary vectors to store realifying transformation */          \
-    FLASH_Obj_create( datatype, m_d, 1, 0, 0, &rL );                    \
-    FLASH_Obj_create( datatype, m_d, 1, 0, 0, &rR );                    \
+    FLASH_Obj_create( datatype,                                         \
+                      m_d,                                              \
+                      1,                                                \
+                      FLASH_depth,                                      \
+                      &FLASH_blocksize,                                 \
+                      &rL );                                            \
+    FLASH_Obj_create( datatype,                                         \
+                      m_d,                                              \
+                      1,                                                \
+                      FLASH_depth,                                      \
+                      &FLASH_blocksize,                                 \
+                      &rR );                                            \
                                                                         \
     /* Do not touch factors in A */                                     \
     FLA_Bidiag_UT_extract_diagonals( A, d2, e2 );                       \

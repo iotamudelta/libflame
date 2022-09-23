@@ -113,12 +113,32 @@
                                                                         \
   if ( FLA_Obj_is_complex( A ) == TRUE ) {                              \
     /* Temporary vectors to store diagonal and subdiagonal */           \
-    FLASH_Obj_create( datatype, m_t, 1, 0, 0, &d2 );                    \
-    if ( m_t > 1 ) FLASH_Obj_create( datatype, m_t - 1, 1, 0, 0, &e2 ); \
+    FLASH_Obj_create( datatype,                                         \
+                      m_t,                                              \
+                      1,                                                \
+                      FLASH_depth,                                      \
+                      &FLASH_blocksize,                                 \
+                      &d2 );                                            \
+    if ( m_t > 1 ) FLASH_Obj_create( datatype,                          \
+                                     m_t - 1,                           \
+                                     1,                                 \
+                                     FLASH_depth,                       \
+                                     &FLASH_blocksize,                  \
+                                     &e2 );                             \
                                                                         \
     /* Temporary vectors to store realifying transformation */          \
-    FLASH_Obj_create( datatype, m_t, 1, 0, 0, &rL );                    \
-    FLASH_Obj_create( datatype, m_t, 1, 0, 0, &rR );                    \
+    FLASH_Obj_create( datatype,                                         \
+                      m_t,                                              \
+                      1,                                                \
+                      FLASH_depth,                                      \
+                      &FLASH_blocksize,                                 \
+                      &rL );                                            \
+    FLASH_Obj_create( datatype,                                         \
+                      m_t,                                              \
+                      1,                                                \
+                      FLASH_depth,                                      \
+                      &FLASH_blocksize,                                 \
+                      &rR );                                            \
                                                                         \
     /* Extract diagonals (complex) and realify them. */                 \
     FLA_Bidiag_UT_extract_diagonals( A, d2, e2 );                       \

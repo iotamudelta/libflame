@@ -120,11 +120,26 @@
       FLA_Obj d2, e2, r;                                                \
                                                                         \
       /* Temporary vectors to store diagonal and subdiagonal */         \
-      FLASH_Obj_create( datatype, m_d, 1, 0, 0, &d2 );                  \
-      FLASH_Obj_create( datatype, m_e, 1, 0, 0, &e2 );                  \
+      FLASH_Obj_create( datatype,                                       \
+                        m_d,                                            \
+                        1,                                              \
+                        FLASH_depth,                                    \
+                        &FLASH_blocksize,                               \
+                        &d2 );                                          \
+      FLASH_Obj_create( datatype,                                       \
+                        m_e,                                            \
+                        1,                                              \
+                        FLASH_depth,                                    \
+                        &FLASH_blocksize,                               \
+                        &e2 );                                          \
                                                                         \
       /* Temporary vectors to store realifying transformation */        \
-      FLASH_Obj_create( datatype, m_d, 1, 0, 0, &r );                   \
+      FLASH_Obj_create( datatype,                                       \
+                        m_d,                                            \
+                        1,                                              \
+                        FLASH_depth,                                    \
+                        &FLASH_blocksize,                               \
+                        &r );                                           \
                                                                         \
       /* Extract diagonals (complex) and realify them. */               \
       FLA_Tridiag_UT_extract_diagonals( uplo_fla, A, d2, e2 );          \
