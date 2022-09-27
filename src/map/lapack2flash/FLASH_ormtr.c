@@ -71,7 +71,7 @@
                                    *m,                                  \
                                    *n,                                  \
                                    FLASH_depth,                         \
-                                   FLASH_blocksize,                     \
+                                   &FLASH_blocksize,                    \
                                    &C );                                \
   FLASH_Obj_attach_buffer( buff_C, 1, *ldim_C, &C );                    \
                                                                         \
@@ -79,7 +79,7 @@
                                    m_d,                                 \
                                    m_d,                                 \
                                    FLASH_depth,                         \
-                                   FLASH_blocksize,                     \
+                                   &FLASH_blocksize,                    \
                                    &A );                                \
   FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                    \
                                                                         \
@@ -91,7 +91,7 @@
                                      m_e,                               \
                                      1,                                 \
                                      FLASH_depth,                       \
-                                     FLASH_blocksize,                   \
+                                     &FLASH_blocksize,                  \
                                      &t );                              \
     FLASH_Obj_attach_buffer( buff_t, 1, m_e, &t );                      \
     PREFIX2FLAME_INVERT_TAU(prefix,t);                                  \

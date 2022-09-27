@@ -76,7 +76,7 @@
                                    *m_d,                                \
                                    1,                                   \
                                    FLASH_depth,                         \
-                                   FLASH_blocksize,                     \
+                                   &FLASH_blocksize,                    \
                                    &d );                                \
   FLASH_Obj_attach_buffer( buff_d, 1, *m_d, &d );                       \
   if ( *m_d > 1 ) {                                                     \
@@ -84,7 +84,7 @@
                                      *m_d - 1,                          \
                                      1,                                 \
                                      FLASH_depth,                       \
-                                     FLASH_blocksize,                   \
+                                     &FLASH_blocksize,                  \
                                      &e );                              \
     FLASH_Obj_attach_buffer( buff_d, 1, *m_d - 1, &e );                 \
   }                                                                     \
@@ -94,7 +94,7 @@
                                      *m_U,                              \
                                      *m_d,                              \
                                      FLASH_depth,                       \
-                                     FLASH_blocksize,                   \
+                                    &FLASH_blocksize,                   \
                                      &U  );                             \
     FLASH_Obj_attach_buffer( buff_U, 1, *ldim_U, &U );                  \
     jobu = FLA_SVD_VECTORS_ALL;                                         \
@@ -106,7 +106,7 @@
                                      *m_d,                              \
                                      *n_Vt,                             \
                                      FLASH_depth,                       \
-                                     FLASH_blocksize,                   \
+                                    &FLASH_blocksize,                   \
                                      &Vt );                             \
     FLASH_Obj_attach_buffer( buff_Vt, 1, *ldim_Vt, &Vt );               \
     jobv = FLA_SVD_VECTORS_ALL;                                         \
@@ -121,7 +121,7 @@
                                      *m_d,                              \
                                      *n_C,                              \
                                      FLASH_depth,                       \
-                                     FLASH_blocksize,                   \
+                                    &FLASH_blocksize,                   \
                                      &C );                              \
     FLASH_Obj_attach_buffer( buff_C, 1, *ldim_C, &C );                  \
   }                                                                     \

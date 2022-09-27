@@ -73,7 +73,7 @@
                                    *m,                          \
                                    *m,                          \
                                    FLASH_depth,                 \
-                                   FLASH_blocksize,             \
+                                   &FLASH_blocksize,            \
                                    &A );                        \
   FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );            \
                                                                 \
@@ -81,7 +81,7 @@
                                    *n,                          \
                                    *n,                          \
                                    FLASH_depth,                 \
-                                   FLASH_blocksize,             \
+                                   &FLASH_blocksize,            \
                                    &B );                        \
   FLASH_Obj_attach_buffer( buff_B, 1, *ldim_B, &B );            \
                                                                 \
@@ -89,7 +89,7 @@
                                    *m,                          \
                                    *n,                          \
                                    FLASH_depth,                 \
-                                   FLASH_blocksize,             \
+                                   &FLASH_blocksize,            \
                                    &C );                        \
   FLASH_Obj_attach_buffer( buff_C, 1, *ldim_C, &C );            \
                                                                 \
@@ -97,7 +97,7 @@
                                    1,                           \
                                    1,                           \
                                    FLASH_depth,                 \
-                                   FLASH_blocksize,             \
+                                   &FLASH_blocksize,            \
                                    &scale_fla );                \
   FLASH_Obj_attach_buffer( &scale, 1, 1, &scale_fla );          \
                                                                 \

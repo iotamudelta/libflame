@@ -50,7 +50,7 @@
                                    *m,                          \
                                    *n,                          \
                                    FLASH_depth,                 \
-                                   FLASH_blocksize,             \
+                                   &FLASH_blocksize,            \
                                    &A );                        \
   FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );            \
                                                                 \
@@ -58,7 +58,7 @@
                                    min_m_n,                     \
                                    1,                           \
                                    FLASH_depth,                 \
-                                   FLASH_blocksize,             \
+                                   &FLASH_blocksize,            \
                                    &p );                        \
   FLASH_Obj_attach_buffer( buff_p, 1, min_m_n, &p );            \
   FLASH_Set( FLA_ZERO, p );                                     \
