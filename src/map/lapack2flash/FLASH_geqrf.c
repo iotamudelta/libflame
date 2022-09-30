@@ -55,7 +55,7 @@
                                                                 \
   FLASH_Set( FLA_ZERO, t );                                     \
                                                                 \
-  FLA_QR_UT_create_T( A, &T );                                  \
+  FLASH_QR_UT_create_T( A, &T );                                \
   FLASH_QR_UT( A, T );                                          \
   FLA_QR_UT_recover_tau( T, t );                                \
   PREFIX2FLAME_INVERT_TAU(prefix,t);                            \

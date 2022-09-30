@@ -51,4 +51,5 @@ FLA_Error FLA_Apply_Q_UT_create_workspace_side( FLA_Side side, FLA_Obj T, FLA_Ob
 
 FLA_Error FLASH_Apply_Q_UT( FLA_Side side, FLA_Trans trans, FLA_Direct direct, FLA_Store storev, FLA_Obj A, FLA_Obj T, FLA_Obj W, FLA_Obj B );
 FLA_Error FLASH_Apply_Q_UT_create_workspace( FLA_Obj TW, FLA_Obj B, FLA_Obj* W );
+FLA_Error FLASH_Apply_Q_UT_create_workspace_side( FLA_Side side, FLA_Obj TW, FLA_Obj B, FLA_Obj* W );
 

@@ -111,9 +111,9 @@
       FLA_Part_1x2( C, &W, &C, 1, FLA_LEFT );                           \
     }                                                                   \
                                                                         \
-    FLA_QR_UT_create_T( A, &T );                                        \
+    FLASH_QR_UT_create_T( A, &T );                                      \
     FLASH_Set( FLA_ZERO, T );                                           \
-    FLA_Apply_Q_UT_create_workspace_side( side_fla, T, C, &W);          \
+    FLASH_Apply_Q_UT_create_workspace_side( side_fla, T, C, &W);        \
     FLA_Accum_T_UT( direct, FLA_COLUMNWISE, A, t, T );                  \
                                                                         \
     if ( FLA_Obj_is_complex( A ) == TRUE ) {                            \

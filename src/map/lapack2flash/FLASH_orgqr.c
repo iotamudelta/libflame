@@ -63,7 +63,7 @@
     PREFIX2FLAME_INVERT_TAU(prefix,t);                                  \
                                                                         \
     FLA_Part_1x2( A, &AL, &AR, *k, FLA_LEFT );                          \
-    FLA_QR_UT_create_T( AL, &T );                                       \
+    FLASH_QR_UT_create_T( AL, &T );                                     \
     FLASH_Set( FLA_ZERO, T );                                           \
     FLA_Accum_T_UT( FLA_FORWARD, FLA_COLUMNWISE, AL, t, T );            \
     FLA_QR_UT_form_Q( AL, T, A );                                       \

@@ -87,9 +87,9 @@
     FLASH_Obj_attach_buffer( buff_t, 1, *k, &t );                       \
     PREFIX2FLAME_INVERT_TAU(prefix,t);                                  \
                                                                         \
-    FLA_QR_UT_create_T( A, &T );                                        \
+    FLASH_QR_UT_create_T( A, &T );                                      \
     FLASH_Set( FLA_ZERO, T );                                           \
-    FLA_Apply_Q_UT_create_workspace_side( side_fla, T, B, &W);          \
+    FLASH_Apply_Q_UT_create_workspace_side( side_fla, T, B, &W);        \
     FLA_Accum_T_UT( FLA_FORWARD, FLA_COLUMNWISE, A, t, T );             \
     FLASH_Apply_Q_UT( side_fla,                                         \
                       trans_fla,                                        \

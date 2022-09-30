@@ -157,9 +157,9 @@
       FLA_Part_1x2( A, &A, &W, FLA_Obj_min_dim( A ), FLA_LEFT );        \
       FLA_Part_2x1( t, &t,                                              \
                        &W, FLA_Obj_min_dim( A ), FLA_TOP );             \
-      FLA_QR_UT_create_T( A, &T );                                      \
+      FLASH_QR_UT_create_T( A, &T );                                    \
       FLASH_Set( FLA_ZERO, T );                                         \
-      FLA_Apply_Q_UT_create_workspace_side( side_fla, T, C, &W);        \
+      FLASH_Apply_Q_UT_create_workspace_side( side_fla, T, C, &W);      \
       FLA_Accum_T_UT( FLA_FORWARD, FLA_COLUMNWISE, A, t, T );           \
                                                                         \
       if ( FLA_Obj_is_complex( A ) == TRUE ) {                          \
@@ -210,7 +210,7 @@
                        &W, FLA_Obj_min_dim( A ), FLA_TOP );             \
       FLA_LQ_UT_create_T( A, &T );                                      \
       FLASH_Set( FLA_ZERO, T );                                         \
-      FLA_Apply_Q_UT_create_workspace_side( side_fla, T, C, &W);        \
+      FLASH_Apply_Q_UT_create_workspace_side( side_fla, T, C, &W);      \
       FLA_Accum_T_UT( FLA_FORWARD, FLA_ROWWISE, A, t, T );              \
                                                                         \
       if ( FLA_Obj_is_complex( A ) == TRUE ) {                          \

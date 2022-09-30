@@ -88,7 +88,7 @@
                                                                         \
       FLA_LQ_UT_create_T( A, &T );                                      \
       FLASH_Set( FLA_ZERO, T );                                         \
-      FLA_Apply_Q_UT_create_workspace_side( side_fla, T, B, &W);        \
+      FLASH_Apply_Q_UT_create_workspace_side( side_fla, T, B, &W);      \
                                                                         \
       FLA_Accum_T_UT( FLA_FORWARD, FLA_ROWWISE, A, t, T );              \
       FLASH_Apply_Q_UT( side_fla, trans_fla, FLA_BACKWARD, FLA_ROWWISE, \

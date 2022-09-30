@@ -111,9 +111,13 @@ extern fla_bidiagut_t* fla_bidiagut_cntl_plain;
   if ( apply_scale )                                                    \
     FLASH_Scal( apply_scale > 0 ? FLA_SAFE_MIN : FLA_SAFE_INV_MIN, A ); \
                                                                         \
-  FLA_Bidiag_UT_create_T( A, &TU, &TV );                                \
-  FLA_Set( FLA_ZERO, TU );                                              \
-  FLA_Set( FLA_ZERO, TV );                                              \
+  FLASH_Bidiag_UT_create_T( A,                                          \
+                            &TU,                                        \
+                            &TV,                                        \
+                            FLASH_depth,                                \
+                            &FLASH_blocksize );                         \
+  FLASH_Set( FLA_ZERO, TU );                                            \
+  FLASH_Set( FLA_ZERO, TV );                                            \
                                                                         \
   FLA_Bidiag_UT_internal( A, TU, TV, fla_bidiagut_cntl_plain );         \
                                                                         \

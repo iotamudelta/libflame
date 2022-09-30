@@ -19,6 +19,7 @@ FLA_Error FLA_Bidiag_UT_l( FLA_Obj A, FLA_Obj TU, FLA_Obj TV, fla_bidiagut_t* cn
 FLA_Error FLA_Bidiag_UT_u( FLA_Obj A, FLA_Obj TU, FLA_Obj TV, fla_bidiagut_t* cntl );
 
 FLA_Error FLA_Bidiag_UT_create_T( FLA_Obj A, FLA_Obj* TU, FLA_Obj* TV );
+FLA_Error FLASH_Bidiag_UT_create_T( FLA_Obj A, FLA_Obj* TU, FLA_Obj* TV, dim_t depth, dim_t* blocksize );
 
 FLA_Error FLA_Bidiag_UT_recover_tau( FLA_Obj TU, FLA_Obj TV, FLA_Obj tu, FLA_Obj tv );
 
@@ -48,4 +49,6 @@ FLA_Error FLA_Bidiag_UT_form_V( FLA_Obj A, FLA_Obj S, FLA_Obj V );
 
 FLA_Error FLA_Bidiag_UT_form_U_ext( FLA_Uplo uplo, FLA_Obj A, FLA_Obj T, FLA_Trans transu, FLA_Obj U );
 FLA_Error FLA_Bidiag_UT_form_V_ext( FLA_Uplo uplo, FLA_Obj A, FLA_Obj S, FLA_Trans transv, FLA_Obj V );
+FLA_Error FLASH_Bidiag_UT_form_U_ext( FLA_Uplo uplo, FLA_Obj A, FLA_Obj T, FLA_Trans transu, FLA_Obj U, dim_t depth, dim_t* blocksize );
+FLA_Error FLASH_Bidiag_UT_form_V_ext( FLA_Uplo uplo, FLA_Obj A, FLA_Obj S, FLA_Trans transv, FLA_Obj V, dim_t depth, dim_t* blocksize );
 
