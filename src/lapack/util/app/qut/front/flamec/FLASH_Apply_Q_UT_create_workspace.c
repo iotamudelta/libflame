@@ -118,8 +118,8 @@ FLA_Error FLASH_Apply_Q_UT_create_workspace_side( FLA_Side side, FLA_Obj TW, FLA
 	//n = FLASH_Obj_scalar_width( B );
 
 	if      ( side == FLA_LEFT  ) n = FLASH_Obj_scalar_width( B );
-    else if ( side == FLA_RIGHT ) n = FLASH_Obj_scalar_length( B );
-    else                          n = FLASH_Obj_scalar_max_dim( B );
+	else if ( side == FLA_RIGHT ) n = FLASH_Obj_scalar_length( B );
+	else                          n = FLASH_Obj_scalar_max_dim( B );
 
 	// Create hierarchical matrix W.
 	FLASH_Obj_create_ext( datatype, m, n, 

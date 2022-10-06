@@ -88,7 +88,7 @@
                                    mm,                                  \
                                    nn,                                  \
                                    FLASH_depth,                         \
-                                   &FLASH_blocksize,                    \
+                                   FLASH_blocksize,                     \
                                    &A );                                \
   FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                    \
                                                                         \
@@ -98,7 +98,7 @@
                                    m_t,                                 \
                                    1,                                   \
                                    FLASH_depth,                         \
-                                   &FLASH_blocksize,                    \
+                                   FLASH_blocksize,                     \
                                    &t );                                \
   FLASH_Obj_attach_buffer( buff_t, 1, m_t, &t );                        \
   PREFIX2FLAME_INVERT_TAU(prefix,t);                                    \
@@ -107,7 +107,7 @@
                                    *m,                                  \
                                    *n,                                  \
                                    FLASH_depth,                         \
-                                  &FLASH_blocksize,                     \
+                                   FLASH_blocksize,                     \
                                    &C );                                \
   FLASH_Obj_attach_buffer( buff_C, 1, *ldim_C, &C );                    \
                                                                         \
@@ -117,13 +117,13 @@
                       m_t,                                              \
                       1,                                                \
                       FLASH_depth,                                      \
-                      &FLASH_blocksize,                                 \
+                      FLASH_blocksize,                                  \
                       &d2 );                                            \
     if ( m_t > 1 ) FLASH_Obj_create( datatype,                          \
                                      m_t - 1,                           \
                                      1,                                 \
                                      FLASH_depth,                       \
-                                     &FLASH_blocksize,                  \
+                                     FLASH_blocksize,                   \
                                      &e2 );                             \
                                                                         \
     /* Temporary vectors to store realifying transformation */          \
@@ -131,13 +131,13 @@
                       m_t,                                              \
                       1,                                                \
                       FLASH_depth,                                      \
-                      &FLASH_blocksize,                                 \
+                      FLASH_blocksize,                                  \
                       &rL );                                            \
     FLASH_Obj_create( datatype,                                         \
                       m_t,                                              \
                       1,                                                \
                       FLASH_depth,                                      \
-                      &FLASH_blocksize,                                 \
+                      FLASH_blocksize,                                  \
                       &rR );                                            \
                                                                         \
     /* Extract diagonals (complex) and realify them. */                 \
@@ -157,7 +157,7 @@
       FLA_Part_1x2( A, &A, &W, FLA_Obj_min_dim( A ), FLA_LEFT );        \
       FLA_Part_2x1( t, &t,                                              \
                        &W, FLA_Obj_min_dim( A ), FLA_TOP );             \
-      FLASH_QR_UT_create_T( A, &T );                                    \
+      FLASH_QR_UT_create_T( A, &T, FLASH_depth, FLASH_blocksize );      \
       FLASH_Set( FLA_ZERO, T );                                         \
       FLASH_Apply_Q_UT_create_workspace_side( side_fla, T, C, &W);      \
       FLA_Accum_T_UT( FLA_FORWARD, FLA_COLUMNWISE, A, t, T );           \

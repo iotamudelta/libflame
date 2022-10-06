@@ -57,7 +57,7 @@
                                    *m,                                  \
                                    *n,                                  \
                                    FLASH_depth,                         \
-                                   &FLASH_blocksize,                    \
+                                   FLASH_blocksize,                     \
                                    &A );                                \
   FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                    \
                                                                         \
@@ -65,7 +65,7 @@
                                    min_m_n,                             \
                                    1,                                   \
                                    FLASH_depth,                         \
-                                   &FLASH_blocksize,                    \
+                                   FLASH_blocksize,                     \
                                    &t );                                \
   FLASH_Obj_attach_buffer( buff_t, 1, min_m_n, &t );                    \
   FLASH_Set( FLA_ZERO, t );                                             \
@@ -74,7 +74,7 @@
                                    *n,                                  \
                                    1,                                   \
                                    FLASH_depth,                         \
-                                  &FLASH_blocksize,                     \
+                                   FLASH_blocksize,                     \
                                    &w );                                \
   FLASH_Obj_attach_buffer( buff_w, 1, *n, &w );                         \
                                                                         \
@@ -83,12 +83,12 @@
                                    *n,                                  \
                                    1,                                   \
                                    FLASH_depth,                         \
-                                  &FLASH_blocksize,                     \
+                                   FLASH_blocksize,                     \
                                    &jpiv );                             \
   FLASH_Obj_attach_buffer( buff_p, 1, *n, &jpiv );                      \
                                                                         \
   /* FLAME pivot storage */                                             \
-  FLASH_Obj_create( FLA_INT, *n, 1, FLASH_depth, &FLASH_blocksize, &p );\
+  FLASH_Obj_create( FLA_INT, *n, 1, FLASH_depth, FLASH_blocksize, &p ); \
   FLASH_Set( FLA_ZERO, p );                                             \
                                                                         \
   /* QR_UT_piv */                                                       \

@@ -57,7 +57,7 @@ extern fla_bidiagut_t* fla_bidiagut_cntl_plain;
                                    *m,                                  \
                                    *n,                                  \
                                    FLASH_depth,                         \
-                                   &FLASH_blocksize,                    \
+                                   FLASH_blocksize,                     \
                                    &A );                                \
   FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                    \
                                                                         \
@@ -67,7 +67,7 @@ extern fla_bidiagut_t* fla_bidiagut_cntl_plain;
                                    m_d,                                 \
                                    1,                                   \
                                    FLASH_depth,                         \
-                                   &FLASH_blocksize,                    \
+                                   FLASH_blocksize,                     \
                                    &d );                                \
   FLASH_Obj_attach_buffer( buff_d, 1, m_d, &d );                        \
                                                                         \
@@ -75,7 +75,7 @@ extern fla_bidiagut_t* fla_bidiagut_cntl_plain;
                                    m_e,                                 \
                                    1,                                   \
                                    FLASH_depth,                         \
-                                   &FLASH_blocksize,                    \
+                                   FLASH_blocksize,                     \
                                    &e );                                \
   if ( m_e > 0 ) FLASH_Obj_attach_buffer( buff_e, 1, m_e, &e );         \
                                                                         \
@@ -84,7 +84,7 @@ extern fla_bidiagut_t* fla_bidiagut_cntl_plain;
                                    m_t,                                 \
                                    1,                                   \
                                    FLASH_depth,                         \
-                                   &FLASH_blocksize,                    \
+                                   FLASH_blocksize,                     \
                                    &tu );                               \
   FLASH_Obj_attach_buffer( buff_tu, 1, m_t, &tu );                      \
                                                                         \
@@ -92,7 +92,7 @@ extern fla_bidiagut_t* fla_bidiagut_cntl_plain;
                                    m_t,                                 \
                                    1,                                   \
                                    FLASH_depth,                         \
-                                   &FLASH_blocksize,                    \
+                                   FLASH_blocksize,                     \
                                    &tv );                               \
   FLASH_Obj_attach_buffer( buff_tv, 1, m_t, &tv );                      \
                                                                         \
@@ -100,7 +100,7 @@ extern fla_bidiagut_t* fla_bidiagut_cntl_plain;
                     1,                                                  \
                     1,                                                  \
                     FLASH_depth,                                        \
-                    &FLASH_blocksize,                                   \
+                    FLASH_blocksize,                                    \
                     &alpha );                                           \
   FLA_Max_abs_value( A, alpha );                                        \
                                                                         \
@@ -115,7 +115,7 @@ extern fla_bidiagut_t* fla_bidiagut_cntl_plain;
                             &TU,                                        \
                             &TV,                                        \
                             FLASH_depth,                                \
-                            &FLASH_blocksize );                         \
+                            FLASH_blocksize );                          \
   FLASH_Set( FLA_ZERO, TU );                                            \
   FLASH_Set( FLA_ZERO, TV );                                            \
                                                                         \
@@ -132,27 +132,27 @@ extern fla_bidiagut_t* fla_bidiagut_cntl_plain;
                       m_d,                                              \
                       1,                                                \
                       FLASH_depth,                                      \
-                      &FLASH_blocksize,                                 \
+                      FLASH_blocksize,                                  \
                       &d2 );                                            \
-    if ( m_e > 0 ) FLA_Obj_create( datatype,                            \
-                                   m_e,                                 \
-                                   1,                                   \
-                                   FLASH_depth,                         \
-                                   &FLASH_blocksize,                    \
-                                   &e2 );                               \
+    if ( m_e > 0 ) FLASH_Obj_create( datatype,                          \
+                                     m_e,                               \
+                                     1,                                 \
+                                     FLASH_depth,                       \
+                                     FLASH_blocksize,                   \
+                                     &e2 );                             \
                                                                         \
     /* Temporary vectors to store realifying transformation */          \
     FLASH_Obj_create( datatype,                                         \
                       m_d,                                              \
                       1,                                                \
                       FLASH_depth,                                      \
-                      &FLASH_blocksize,                                 \
+                      FLASH_blocksize,                                  \
                       &rL );                                            \
     FLASH_Obj_create( datatype,                                         \
                       m_d,                                              \
                       1,                                                \
                       FLASH_depth,                                      \
-                      &FLASH_blocksize,                                 \
+                      FLASH_blocksize,                                  \
                       &rR );                                            \
                                                                         \
     /* Do not touch factors in A */                                     \

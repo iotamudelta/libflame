@@ -88,7 +88,7 @@
                                    *m,                                  \
                                    *n,                                  \
                                    FLASH_depth,                         \
-                                   &FLASH_blocksize,                    \
+                                   FLASH_blocksize,                     \
                                    &A );                                \
   FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                    \
                                                                         \
@@ -97,7 +97,7 @@
                                    min_m_n,                             \
                                    1,                                   \
                                    FLASH_depth,                         \
-                                   &FLASH_blocksize,                    \
+                                   FLASH_blocksize,                     \
                                    &s );                                \
   FLASH_Obj_attach_buffer( buff_s, 1, min_m_n, &s );                    \
                                                                         \
@@ -107,7 +107,7 @@
                                      m_U,                               \
                                      n_U,                               \
                                      FLASH_depth,                       \
-                                     &FLASH_blocksize,                  \
+                                     FLASH_blocksize,                   \
                                      &U );                              \
     FLASH_Obj_attach_buffer( buff_U, 1, *ldim_U, &U );                  \
   } else {                                                              \
@@ -119,7 +119,7 @@
                                      m_V,                               \
                                      n_V,                               \
                                      FLASH_depth,                       \
-                                     &FLASH_blocksize,                  \
+                                     FLASH_blocksize,                   \
                                      &V );                              \
     FLASH_Obj_attach_buffer( buff_Vh, 1, *ldim_Vh, &V );                \
   } else {                                                              \

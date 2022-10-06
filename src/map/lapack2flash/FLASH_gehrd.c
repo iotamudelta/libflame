@@ -42,7 +42,7 @@
                                    *m,                          \
                                    *m,                          \
                                    FLASH_depth,                 \
-                                   &FLASH_blocksize,            \
+                                   FLASH_blocksize,             \
                                    &A );                        \
   FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );            \
                                                                 \
@@ -50,7 +50,7 @@
                                    m_t,                         \
                                    1,                           \
                                    FLASH_depth,                 \
-                                   &FLASH_blocksize,            \
+                                   FLASH_blocksize,             \
                                    &t );                        \
   if ( m_t > 0 ) FLASH_Obj_attach_buffer( buff_t, 1, m_t, &t ); \
                                                                 \
