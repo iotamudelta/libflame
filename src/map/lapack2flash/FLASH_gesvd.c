@@ -126,9 +126,10 @@
     FLA_Obj_nullify( &V );                                              \
   }                                                                     \
   /* Compute SVD */                                                     \
-  e_val = FLA_Svd_ext( jobu_fla, FLA_NO_TRANSPOSE,                      \
-                       jobv_fla, FLA_CONJ_TRANSPOSE,                    \
-                       A, s, U, V );                                    \
+  e_val = FLASH_Svd_ext( jobu_fla, FLA_NO_TRANSPOSE,                    \
+                         jobv_fla, FLA_CONJ_TRANSPOSE,                  \
+                         A, s, U, V,                                    \
+                         FLASH_depth, FLASH_blocksize );                \
                                                                         \
   /* Clean up */                                                        \
   if ( create_U ) FLASH_Obj_free_without_buffer( &U );                  \
