@@ -71,7 +71,7 @@
                                    m_A,                                 \
                                    n_A,                                 \
                                    FLASH_depth,                         \
-                                   &FLASH_blocksize,                    \
+                                   FLASH_blocksize,                     \
                                    &A );                                \
   FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                    \
                                                                         \
@@ -79,7 +79,7 @@
                                    m_t,                                 \
                                    1,                                   \
                                    FLASH_depth,                         \
-                                   &FLASH_blocksize,                    \
+                                   FLASH_blocksize,                     \
                                    &t );                                \
   if ( m_t > 0 ) {                                                      \
     FLASH_Obj_attach_buffer( buff_t, 1, m_t, &t );                      \
@@ -100,11 +100,12 @@
     FLA_Part_2x1( t, &t,                                                \
                      &T, FLA_Obj_min_dim( Ah ), FLA_TOP );              \
                                                                         \
+/* TODO: I believe this should be adding a buffer and it is not*/       \
     FLASH_Bidiag_UT_create_T( A2,                                       \
                               &T,                                       \
                               NULL,                                     \
                               FLASH_depth,                              \
-                              &FLASH_blocksize );                       \
+                              FLASH_blocksize );                        \
     FLASH_Set( FLA_ZERO, T );                                           \
     FLA_Part_1x2( T, &TL, &TR, FLA_Obj_length( t ), FLA_LEFT );         \
     FLA_Accum_T_UT( FLA_FORWARD, FLA_COLUMNWISE, Ah, t, TL );           \
@@ -120,7 +121,7 @@
                               NULL,                                     \
                               &T,                                       \
                               FLASH_depth,                              \
-                              &FLASH_blocksize );                       \
+                              FLASH_blocksize );                        \
     FLASH_Set( FLA_ZERO, T );                                           \
     FLA_Part_1x2( T, &TL, &TR, FLA_Obj_length( t ), FLA_LEFT );         \
     FLA_Accum_T_UT( FLA_FORWARD, FLA_ROWWISE, Ah, t, TL );              \
@@ -138,13 +139,13 @@
                       m_t,                                              \
                       1,                                                \
                       FLASH_depth,                                      \
-                      &FLASH_blocksize,                                 \
+                      FLASH_blocksize,                                  \
                       &d2 );                                            \
     if ( m_t > 1 ) FLASH_Obj_create( datatype,                          \
                                      m_t - 1,                           \
                                      1,                                 \
                                      FLASH_depth,                       \
-                                     &FLASH_blocksize,                  \
+                                     FLASH_blocksize,                   \
                                      &e2 );                             \
                                                                         \
     /* Temporary vectors to store realifying transformation */          \
@@ -152,13 +153,13 @@
                       m_t,                                              \
                       1,                                                \
                       FLASH_depth,                                      \
-                      &FLASH_blocksize,                                 \
+                      FLASH_blocksize,                                  \
                       &rL );                                            \
     FLASH_Obj_create( datatype,                                         \
                       m_t,                                              \
                       1,                                                \
                       FLASH_depth,                                      \
-                      &FLASH_blocksize,                                 \
+                      FLASH_blocksize,                                  \
                       &rR );                                            \
                                                                         \
     /* Extract diagonals (complex) and realify them. */                 \
@@ -178,7 +179,7 @@
                                   FLA_NO_TRANSPOSE,                     \
                                   A,                                    \
                                   FLASH_depth,                          \
-                                  &FLASH_blocksize );                   \
+                                  FLASH_blocksize );                    \
                                                                         \
       /* Applying rL */                                                 \
       FLA_Apply_diag_matrix( FLA_RIGHT, FLA_CONJUGATE, rL, A2 );        \
@@ -190,7 +191,7 @@
                                   FLA_CONJ_TRANSPOSE,                   \
                                   A,                                    \
                                   FLASH_depth,                          \
-                                  &FLASH_blocksize );                   \
+                                  FLASH_blocksize );                    \
                                                                         \
       /* Applying rR */                                                 \
       FLA_Apply_diag_matrix( FLA_LEFT, FLA_CONJUGATE, rR, A2 );         \
@@ -209,7 +210,7 @@
                                   FLA_NO_TRANSPOSE,                     \
                                   A,                                    \
                                   FLASH_depth,                          \
-                                  &FLASH_blocksize );                   \
+                                  FLASH_blocksize );                    \
     } else {/*( *vect == 'P' ) */                                       \
       FLASH_Bidiag_UT_form_V_ext( uplo,                                 \
                                   A,                                    \
@@ -217,12 +218,12 @@
                                   FLA_CONJ_TRANSPOSE,                   \
                                   A,                                    \
                                   FLASH_depth,                          \
-                                  &FLASH_blocksize );                   \
+                                  FLASH_blocksize );                    \
     }                                                                   \
   }                                                                     \
                                                                         \
+  /*FLASH_Obj_free( &T ); // T should have a buffer, need to fix*/      \
   FLASH_Obj_free_without_buffer( &T );                                  \
-    /*FLASH_Obj_free( &T ); this might cause a mem leak*/               \
   FLASH_Obj_free_without_buffer( &t );                                  \
   FLASH_Obj_free_without_buffer( &A );                                  \
                                                                         \

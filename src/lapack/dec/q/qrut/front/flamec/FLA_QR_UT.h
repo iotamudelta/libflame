@@ -21,7 +21,7 @@ FLA_Error FLA_QR_UT_recover_tau( FLA_Obj T, FLA_Obj tau );
 
 FLA_Error FLA_QR_UT_solve( FLA_Obj A, FLA_Obj T, FLA_Obj B, FLA_Obj X );
 
-FLA_Error FLASH_QR_UT_create_T( FLA_Obj A, FLA_Obj* T );
+FLA_Error FLASH_QR_UT_create_T( FLA_Obj A, FLA_Obj* T, dim_t depth, dim_t* blocksize );
 FLA_Error FLASH_QR_UT( FLA_Obj A, FLA_Obj TW );
 FLA_Error FLASH_QR_UT_create_hier_matrices( FLA_Obj A_flat, dim_t depth, dim_t* b_flash, FLA_Obj* A, FLA_Obj* TW );
 FLA_Error FLASH_QR_UT_solve( FLA_Obj A, FLA_Obj T, FLA_Obj B, FLA_Obj X );

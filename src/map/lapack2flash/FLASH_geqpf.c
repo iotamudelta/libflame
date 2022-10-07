@@ -92,7 +92,7 @@
   FLASH_Set( FLA_ZERO, p );                                             \
                                                                         \
   /* QR_UT_piv */                                                       \
-  FLASH_QR_UT_create_T( A, &T );                                        \
+  FLASH_QR_UT_create_T( A, &T, FLASH_depth, FLASH_blocksize );          \
   FLASH_Set( FLA_ZERO, T );                                             \
                                                                         \
   FLA_QR_UT_piv( A, T, w, p );                                          \

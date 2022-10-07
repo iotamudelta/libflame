@@ -33,7 +33,7 @@ FLA_Error FLASH_QR_UT_form_Q( FLA_Obj A, FLA_Obj T, FLA_Obj Q )
         r_val = FLA_Apply_Q_UT( FLA_LEFT, FLA_NO_TRANSPOSE,
                                 FLA_FORWARD, FLA_COLUMNWISE,
                                 A, T, W, Q );
-        //FLASH_Obj_free( &W );  Need to see if it's alright to sub these out, this might cause a mem leak
+        //FLASH_Obj_free( &W );  //TODO see why this doesn't have a buffer. I'm pretty sure it's an issue with arg T
         FLASH_Obj_free_without_buffer( &W );
 
     }
@@ -49,7 +49,7 @@ FLA_Error FLASH_QR_UT_form_Q( FLA_Obj A, FLA_Obj T, FLA_Obj Q )
 
         // Adjust T w.r.t A; W is a place holder.
         if ( FLA_Obj_width( T ) > FLA_Obj_width( A ) )
-            FLA_Part_1x2( T,    &T,   &W,
+            FLA_Part_1x2( T, &T, &W,
                           FLA_Obj_width( A ),
                           FLA_LEFT );
 

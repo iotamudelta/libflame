@@ -10,7 +10,7 @@
 
 #include "FLAME.h"
 
-FLA_Error FLASH_QR_UT_create_T( FLA_Obj A, FLA_Obj* T )
+FLA_Error FLASH_QR_UT_create_T( FLA_Obj A, FLA_Obj* T, dim_t depth, dim_t* blocksize )
 {
   FLA_Datatype datatype;
   dim_t        b_alg, k;
@@ -45,7 +45,7 @@ FLA_Error FLASH_QR_UT_create_T( FLA_Obj A, FLA_Obj* T )
 
   // Create a b_alg x k matrix to hold the block Householder transforms that
   // will be accumulated within the QR factorization algorithm.
-  FLASH_Obj_create( datatype, b_alg, k, rs_T, cs_T, T );
+  FLASH_Obj_create( datatype, b_alg, k, depth, blocksize, T );
 
   return FLA_SUCCESS;
 }
