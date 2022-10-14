@@ -22,11 +22,11 @@
    computed by ZPOTRF.
 */
 
-#define LAPACK_potri(prefix)                                    \
-  int F77_ ## prefix ## potri( char* uplo,                      \
-                               int*  n,                         \
-                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_A, \
-                               int*  ldim_A,                         \
+#define LAPACK_potri(prefix)                                            \
+  int F77_ ## prefix ## potri( char* uplo,                              \
+                               int*  n,                                 \
+                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_A,   \
+                               int*  ldim_A,                            \
                                int*  info )
 
 #define LAPACK_potri_body(prefix)                               \
@@ -35,21 +35,28 @@
   FLA_Obj      A;                                               \
   FLA_Error    e_val;                                           \
   FLA_Error    init_result;                                     \
+  dim_t        depth = DEPTH_SIZE;                              \
+  dim_t        blocksize = BLOCK_SIZE;                          \
                                                                 \
   FLA_Init_safe( &init_result );                                \
   FLA_Param_map_netlib_to_flame_uplo( uplo, &uplo_fla );        \
                                                                 \
-  FLA_Obj_create_without_buffer( datatype, *n, *n, &A );        \
-  FLA_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );              \
+  FLASH_Obj_create_without_buffer( datatype,                    \
+                                   *n,                          \
+                                   *n,                          \
+                                   depth,                       \
+                                   &blocksize,                  \
+                                   &A );                        \
+  FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );            \
                                                                 \
-  e_val = FLA_Trinv( uplo_fla, FLA_NONUNIT_DIAG, A );           \
+  e_val = FLASH_Trinv( uplo_fla, FLA_NONUNIT_DIAG, A );         \
                                                                 \
   if ( e_val != FLA_SUCCESS )            *info = e_val + 1;     \
   else {                                                        \
-    e_val = FLA_Ttmm( uplo_fla, A );                            \
+    e_val = FLASH_Ttmm( uplo_fla, A );                          \
     if ( e_val != FLA_SUCCESS )          *info = e_val + 1;     \
   }                                                             \
-  FLA_Obj_free_without_buffer( &A );                            \
+  FLASH_Obj_free_without_buffer( &A );                          \
                                                                 \
   FLA_Finalize_safe( init_result );                             \
                                                                 \
