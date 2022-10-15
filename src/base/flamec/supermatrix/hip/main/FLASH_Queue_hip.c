@@ -21,6 +21,9 @@
 static FLA_Bool flash_queue_enabled_hip  = FALSE;
 static FLA_Bool flash_malloc_managed_hip = FALSE;
 static dim_t    flash_queue_hip_n_blocks = 128;
+static dim_t    flash_queue_hip_blocksize = 1024;
+static dim_t    flash_queue_hip_n_threads = 1;
+static dim_t    flash_queue_hip_depth = 1;
 static rocblas_handle* handles;
 
 void FLASH_Queue_init_hip( void )
@@ -225,7 +228,6 @@ void FLASH_Queue_set_hip_num_blocks( dim_t n_blocks )
    return;
 }
 
-
 dim_t FLASH_Queue_get_hip_num_blocks( void )
 /*----------------------------------------------------------------------------
 
@@ -236,6 +238,74 @@ dim_t FLASH_Queue_get_hip_num_blocks( void )
    return flash_queue_hip_n_blocks;
 }
 
+FLA_Error FLASH_Queue_set_hip_blocksize( dim_t blocksize )
+
+/*----------------------------------------------------------------------------
+
+   FLASH_Queue_set_hip_blocksize
+
+----------------------------------------------------------------------------*/
+{
+   flash_queue_hip_blocksize = blocksize;
+
+   return FLA_SUCCESS;
+}
+
+dim_t FLASH_Queue_get_hip_blocksize( void )
+/*----------------------------------------------------------------------------
+
+   FLASH_Queue_get_hip_blocksize
+
+----------------------------------------------------------------------------*/
+{
+   return flash_queue_hip_blocksize;
+}
+
+FLA_Error FLASH_Queue_set_n_threads( dim_t threads )
+
+/*----------------------------------------------------------------------------
+
+   FLASH_Queue_set_n_threads
+
+----------------------------------------------------------------------------*/
+{
+   flash_queue_hip_n_threads = threads;
+
+   return FLA_SUCCESS;
+}
+
+dim_t FLASH_Queue_get_n_threads( void )
+/*----------------------------------------------------------------------------
+
+   FLASH_Queue_get_n_threads
+
+----------------------------------------------------------------------------*/
+{
+   return flash_queue_hip_n_threads;
+}
+
+FLA_Error FLASH_Queue_set_hip_depth( dim_t depth )
+
+/*----------------------------------------------------------------------------
+
+   FLASH_Queue_set_hip_depth
+
+----------------------------------------------------------------------------*/
+{
+   flash_queue_hip_depth = depth;
+
+   return FLA_SUCCESS;
+}
+
+dim_t FLASH_Queue_get_hip_depth( void )
+/*----------------------------------------------------------------------------
+
+   FLASH_Queue_get_hip_depth
+
+----------------------------------------------------------------------------*/
+{
+   return flash_queue_hip_depth;
+}
 
 // --- helper functions --- ===================================================
 

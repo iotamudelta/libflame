@@ -32,12 +32,12 @@
    Hence, if the routine passes above error checking, FLA_Trinv should not produce any error.
 */
 
-#define LAPACK_trtri(prefix)                                    \
-  int F77_ ## prefix ## trtri( char* uplo,                      \
-                               char* diag,                      \
-                               int* n,                          \
-                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_A, \
-                               int* ldim_A,                     \
+#define LAPACK_trtri(prefix)                                            \
+  int F77_ ## prefix ## trtri( char* uplo,                              \
+                               char* diag,                              \
+                               int* n,                                  \
+                               PREFIX2LAPACK_TYPEDEF(prefix)* buff_A,   \
+                               int* ldim_A,                             \
                                int* info )
 
 #define LAPACK_trtri_body(prefix)                               \
@@ -46,23 +46,29 @@
   FLA_Diag     diag_fla;                                        \
   FLA_Obj      A;                                               \
   FLA_Error    init_result;                                     \
+  dim_t        blocksize = FLASH_Queue_get_hip_blocksize();     \
                                                                 \
-  FLA_Init_safe( &init_result );                                        \
-                                                                        \
-  FLA_Param_map_netlib_to_flame_uplo( uplo, &uplo_fla );                \
-  FLA_Param_map_netlib_to_flame_diag( diag, &diag_fla );                \
-                                                                        \
-  FLA_Obj_create_without_buffer( datatype, *n, *n, &A );                \
-  FLA_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );                      \
-                                                                        \
-  FLA_Trinv( uplo_fla, diag_fla, A );                                   \
-                                                                        \
-  FLA_Obj_free_without_buffer( &A );                                    \
-                                                                        \
-  FLA_Finalize_safe( init_result );                                     \
-                                                                        \
-  *info = 0;                                                            \
-                                                                        \
+  FLA_Init_safe( &init_result );                                \
+                                                                \
+  FLA_Param_map_netlib_to_flame_uplo( uplo, &uplo_fla );        \
+  FLA_Param_map_netlib_to_flame_diag( diag, &diag_fla );        \
+                                                                \
+  FLASH_Obj_create_without_buffer( datatype,                    \
+                                   *n,                          \
+                                   *n,                          \
+                                   FLASH_Queue_get_hip_depth(), \
+                                   &blocksize,                  \
+                                   &A );                        \
+  FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );            \
+                                                                \
+  FLASH_Trinv( uplo_fla, diag_fla, A );                         \
+                                                                \
+  FLASH_Obj_free_without_buffer( &A );                          \
+                                                                \
+  FLA_Finalize_safe( init_result );                             \
+                                                                \
+  *info = 0;                                                    \
+                                                                \
   return 0;
 
 LAPACK_trtri(s)
