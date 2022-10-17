@@ -1516,7 +1516,17 @@ Optional Features:
                           if this option is enabled, then
                           external-lapack-for-subproblems MUST be disabled.
                           (Disabled by default.)
-  --enable-lapack2flash   (In test at the moment)
+  --enable-lapack2flash   Compile and build into libflame a compatibility
+                          layer that maps LAPACK invocations to their
+                          corresponding FLASH/C implementations. Note that
+                          erroneous input parameters are reported according to
+                          libflame conventions, NOT LAPACK conventions. That
+                          is, if libflame error checking is disabled, no error
+                          checking is performed, and if erroneous input
+                          parameters are detected, the library aborts. Also,
+                          if this option is enabled, then
+                          external-lapack-for-subproblems MUST be disabled.
+                          (Disabled by default.)
   --enable-external-lapack-for-subproblems
                           Enable code that causes most of the
                           computationally-intensive functions within libflame
