@@ -59,7 +59,7 @@
   FLA_Obj      scale_fla;                                       \
   FLA_Error    e_val;                                           \
   FLA_Error    init_result;                                     \
-  dim_t        blocksize = FLASH_Queue_get_block_size();        \
+  dim_t        blocksize = FLASH_get_blocksize();               \
                                                                 \
   LAPACK_trsyl_op_check(prefix,srname)                          \
                                                                 \
@@ -74,7 +74,7 @@
   FLASH_Obj_create_without_buffer( datatype,                    \
                                    *m,                          \
                                    *m,                          \
-                                   FLASH_Queue_get_hip_depth(), \
+                                   FLASH_get_depth(),           \
                                    &blocksize,                  \
                                    &A );                        \
   FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );            \
@@ -82,7 +82,7 @@
   FLASH_Obj_create_without_buffer( datatype,                    \
                                    *n,                          \
                                    *n,                          \
-                                   FLASH_Queue_get_hip_depth(), \
+                                   FLASH_get_depth(),           \
                                    &blocksize,                  \
                                    &B );                        \
   FLASH_Obj_attach_buffer( buff_B, 1, *ldim_B, &B );            \
@@ -90,7 +90,7 @@
   FLASH_Obj_create_without_buffer( datatype,                    \
                                    *m,                          \
                                    *n,                          \
-                                   FLASH_Queue_get_hip_depth(), \
+                                   FLASH_get_depth(),           \
                                    &blocksize,                  \
                                    &C );                        \
   FLASH_Obj_attach_buffer( buff_C, 1, *ldim_C, &C );            \
@@ -98,7 +98,7 @@
   FLASH_Obj_create_without_buffer( datatype_scale,              \
                                    1,                           \
                                    1,                           \
-                                   FLASH_Queue_get_hip_depth(), \
+                                   FLASH_get_depth(),           \
                                    &blocksize,                  \
                                    &scale_fla );                \
   FLASH_Obj_attach_buffer( &scale, 1, 1, &scale_fla );          \

@@ -47,7 +47,7 @@
   FLA_Diag     diag_fla;                                        \
   FLA_Obj      A;                                               \
   FLA_Error    init_result;                                     \
-  dim_t        blocksize = FLASH_Queue_get_hip_blocksize();     \
+  dim_t        blocksize = FLASH_get_blocksize();               \
                                                                 \
   FLA_Init_safe( &init_result );                                \
                                                                 \
@@ -57,7 +57,7 @@
   FLASH_Obj_create_without_buffer( datatype,                    \
                                    *n,                          \
                                    *n,                          \
-                                   FLASH_Queue_get_hip_depth(), \
+                                   FLASH_get_depth(),           \
                                    &blocksize,                  \
                                    &A );                        \
   FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );            \

@@ -33,12 +33,6 @@ FLA_Bool       FLASH_Queue_get_malloc_managed_enabled_hip( void );
 
 void           FLASH_Queue_set_hip_num_blocks( dim_t n_blocks );
 dim_t          FLASH_Queue_get_hip_num_blocks( void );
-FLA_Error      FLASH_Queue_set_hip_blocksize( dim_t blocksize );
-dim_t          FLASH_Queue_get_hip_blocksize( void );
-FLA_Error      FLASH_Queue_set_n_threads( dim_t threads );
-dim_t          FLASH_Queue_get_n_threads( void );
-FLA_Error      FLASH_Queue_set_hip_depth( dim_t depth );
-dim_t          FLASH_Queue_get_hip_depth( void );
 
 FLA_Error      FLASH_Queue_bind_hip( int thread );
 FLA_Error      FLASH_Queue_alloc_hip( dim_t size, FLA_Datatype datatype, void** buffer_hip );

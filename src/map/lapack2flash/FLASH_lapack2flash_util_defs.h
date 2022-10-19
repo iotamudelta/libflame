@@ -85,4 +85,11 @@ extern int FLAME_invert_ztau( FLA_Obj t );
 
 extern int FLAME_QR_piv_preorder( FLA_Obj A, int *jpiv_lapack, int *jpiv_fla );
 
+FLA_Error      FLASH_set_blocksize( dim_t blocksize );
+dim_t          FLASH_get_blocksize( void );
+FLA_Error      FLASH_set_n_threads( dim_t threads );
+dim_t          FLASH_get_n_threads( void );
+FLA_Error      FLASH_set_depth( dim_t depth );
+dim_t          FLASH_get_depth( void );
+
 #endif
