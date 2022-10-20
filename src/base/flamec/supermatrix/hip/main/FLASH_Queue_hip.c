@@ -236,6 +236,7 @@ dim_t FLASH_Queue_get_hip_num_blocks( void )
    return flash_queue_hip_n_blocks;
 }
 
+
 // --- helper functions --- ===================================================
 
 
