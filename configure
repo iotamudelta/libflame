@@ -6700,6 +6700,9 @@ printf "%s\n" "no" >&6; }
 	fi
 
   if test "$fla_enable_lapack2flash" = "yes" ; then
+  	if test "$fla_enable_lapack2flame" = "yes" ; then
+			as_fn_error 1 "Configuring libflame to enable both lapack2flame and lapack2flash is not allowed. Please adjust your configure options accordingly and then re-run configure." "$LINENO" 5
+		fi
 		if test "$fla_enable_external_lapack_for_subproblems" = "yes" ; then
 			as_fn_error 1 "Configuring libflame to enable both lapack2flash and external-lapack-for-subproblems is not allowed. lapack2flash requires that external-lapack-for-subproblems be disabled. Please adjust your configure options accordingly and then re-run configure." "$LINENO" 5
 		fi
