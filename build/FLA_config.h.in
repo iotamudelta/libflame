@@ -61,8 +61,8 @@
    */
 #undef FLA_ENABLE_LAPACK2FLAME
 
-/* Determines whether the LAPACK FLASH compatibility layer is included in libflame.
-   */
+/* Determines whether the LAPACK FLASH compatibility layer is included in
+   libflame. */
 #undef FLA_ENABLE_LAPACK2FLASH
 
 /* Determines whether to enable code that will increase FLA_Obj leading

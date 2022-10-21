@@ -690,15 +690,15 @@ fla_enable_vector_intrinsics
 fla_c_sse_flags
 fla_enable_hip
 fla_enable_gpu
-fla_enable_supermatrix
 fla_multithreading_model
 fla_enable_multithreading
 fla_c_openmp_flags
 fla_enable_blas3_front_end_cntl_trees
+fla_enable_supermatrix
 fla_enable_external_lapack_interfaces
 fla_enable_external_lapack_for_subproblems
-fla_enable_lapack2flame
 fla_enable_lapack2flash
+fla_enable_lapack2flame
 fla_enable_builtin_blas
 fla_enable_non_critical_code
 fla_c_lang_flags
@@ -803,9 +803,9 @@ enable_lapack2flame
 enable_lapack2flash
 enable_external_lapack_for_subproblems
 enable_external_lapack_interfaces
+enable_supermatrix
 enable_blas3_front_end_cntl_trees
 enable_multithreading
-enable_supermatrix
 enable_gpu
 enable_hip
 enable_vector_intrinsics
@@ -1514,8 +1514,8 @@ Optional Features:
                           checking is performed, and if erroneous input
                           parameters are detected, the library aborts. Also,
                           if this option is enabled, then
-                          external-lapack-for-subproblems MUST be disabled.
-                          (Disabled by default.)
+                          external-lapack-for-subproblems and lapack2flash
+                          MUST be disabled. (Disabled by default.)
   --enable-lapack2flash   Compile and build into libflame a compatibility
                           layer that maps LAPACK invocations to their
                           corresponding FLASH/C implementations. Note that
@@ -1524,16 +1524,17 @@ Optional Features:
                           is, if libflame error checking is disabled, no error
                           checking is performed, and if erroneous input
                           parameters are detected, the library aborts. Also,
-                          if this option is enabled, then supermatrix MUST be ENABLED 
-                          and external-lapack-for-subproblems MUST be DISABLED.
-                          (Disabled by default.)
+                          if this option is enabled, supermatrix MUST be
+                          ENABLED while external-lapack-for-subproblems and
+                          lapack2flame MUST be DISABLED. (Disabled by
+                          default.)
   --enable-external-lapack-for-subproblems
                           Enable code that causes most of the
                           computationally-intensive functions within libflame
                           to compute their smallest subproblems by invoking a
                           corresponding (usually unblocked) LAPACK routine.
-                          Note that if this option is enabled, lapack2flame and
-                          lapack2flash MUST be disabled. Also, if this option is enabled,
+                          Note that if this option is enabled, lapack2flame
+                          MUST be disabled. Also, if this option is enabled,
                           then external-lapack-interfaces MUST also be
                           enabled. Enabling this option is useful when a
                           libflame user wishes to leverage an optimized
@@ -1547,6 +1548,9 @@ Optional Features:
                           FLAME-like functions. Note that if this option is
                           enabled, an LAPACK library will be required at
                           link-time. (Disabled by default.)
+  --enable-supermatrix    Enable Ernie Chan's dependency-aware task scheduling
+                          and parallel execution system. (Disabled by
+                          default.)
   --enable-blas3-front-end-cntl-trees
                           Enable code that uses control trees to select a
                           reasonable variant and blocksize when level-3 BLAS
@@ -1560,9 +1564,6 @@ Optional Features:
                           model are "pthreads" and "openmp". Multithreading
                           must be enabled to access SMP parallelized
                           implementations. (Disabled by default.)
-  --enable-supermatrix    Enable Ernie Chan's dependency-aware task scheduling
-                          and parallel execution system. (Disabled by
-                          default.)
   --enable-gpu            Enable code that takes advantage of GPUs when
                           performing certain computations. If enabled,
                           SuperMatrix must also be enabled. Note that this
@@ -6505,96 +6506,98 @@ printf "%s\n" "no" >&6; }
 
 
 
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether user requested the lapack2flame compatibility layer" >&5
-	printf %s "checking whether user requested the lapack2flame compatibility layer... " >&6; }
+		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether user requested the lapack2flame compatibility layer" >&5
+printf %s "checking whether user requested the lapack2flame compatibility layer... " >&6; }
 
-# Check whether --enable-lapack2flame was given.
+				# Check whether --enable-lapack2flame was given.
 if test ${enable_lapack2flame+y}
 then :
-	enableval=$enable_lapack2flame;
-	if test "$enableval" = "no" ; then
-		fla_enable_lapack2flame=no
-	elif test "$enableval" = "yes" ; then
-		fla_enable_lapack2flame=yes
-	else
-		as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LAPACK2FLAME!" "$LINENO" 5
-	fi
+  enableval=$enable_lapack2flame;
+				if test "$enableval" = "no" ; then
+
+
+						fla_enable_lapack2flame=no
+
+		elif test "$enableval" = "yes" ; then
+
+						fla_enable_lapack2flame=yes
+		else
+
+												as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LAPACK2FLAME!" "$LINENO" 5
+		fi
+
 else $as_nop
-	fla_enable_lapack2flame=no
+
+						fla_enable_lapack2flame=no
+
+
 fi
 
 
-if   test "$fla_enable_lapack2flame" = "yes" ; then
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-		printf "%s\n" "yes" >&6; }
-	printf "%s\n" "#define FLA_ENABLE_LAPACK2FLAME 1" >>confdefs.h
-elif test "$fla_enable_lapack2flame" = "no" ; then
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
-		printf "%s\n" "no" >&6; }
-else
-	as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LAPACK2FLAME!" "$LINENO" 5
-fi
+		if   test "$fla_enable_lapack2flame" = "yes" ; then
+
+				{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+
+
+printf "%s\n" "#define FLA_ENABLE_LAPACK2FLAME 1" >>confdefs.h
+
+
+	elif test "$fla_enable_lapack2flame" = "no" ; then
+
+				{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+
+	else
+				as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LAPACK2FLAME!" "$LINENO" 5
+	fi
 
 
 
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether user requested the lapack2flash compatibility layer" >&5
-	printf %s "checking whether user requested the lapack2flash compatibility layer... " >&6; }
 
-# Check whether --enable-lapack2flash was given.
+
+
+		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether user requested the lapack2flash compatibility layer" >&5
+printf %s "checking whether user requested the lapack2flash compatibility layer... " >&6; }
+
+				# Check whether --enable-lapack2flash was given.
 if test ${enable_lapack2flash+y}
 then :
-	enableval=$enable_lapack2flash;
-	if test "$enableval" = "no" ; then
-		fla_enable_lapack2flash=no
-	elif test "$enableval" = "yes" ; then
-		fla_enable_lapack2flash=yes
-	else
-		as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LAPACK2FLASH!" "$LINENO" 5
-	fi
+  enableval=$enable_lapack2flash;
+				if test "$enableval" = "no" ; then
+						fla_enable_lapack2flash=no
+		elif test "$enableval" = "yes" ; then
+						fla_enable_lapack2flash=yes
+		else
+												as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LAPACK2FLASH!" "$LINENO" 5
+		fi
+
 else $as_nop
-	fla_enable_lapack2flash=no
+
+						fla_enable_lapack2flash=no
+
+
 fi
 
-if   test "$fla_enable_lapack2flash" = "yes" ; then
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-		printf "%s\n" "yes" >&6; }
-	printf "%s\n" "#define FLA_ENABLE_LAPACK2FLASH 1" >>confdefs.h
-elif test "$fla_enable_lapack2flash" = "no" ; then
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
-		printf "%s\n" "no" >&6; }
-else
-	as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LAPACK2FLASH!" "$LINENO" 5
-fi
 
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether user requested SuperMatrix functionality" >&5
-	printf %s "checking whether user requested SuperMatrix functionality... " >&6; }
+		if   test "$fla_enable_lapack2flash" = "yes" ; then
+				{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
 
-# Check whether --enable-supermatrix was given.
-if test ${enable_supermatrix+y}
-then :
-	enableval=$enable_supermatrix;
-	if test "$enableval" = "no" ; then
-		fla_enable_supermatrix=no
-	elif test "$enableval" = "yes" ; then
-		fla_enable_supermatrix=yes
+
+printf "%s\n" "#define FLA_ENABLE_LAPACK2FLASH 1" >>confdefs.h
+
+	elif test "$fla_enable_lapack2flash" = "no" ; then
+				{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
 	else
-		as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_SUPERMATRIX!" "$LINENO" 5
+				as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LAPACK2FLASH!" "$LINENO" 5
 	fi
-else $as_nop
-	fla_enable_supermatrix=no
-fi
 
-if test "$fla_enable_supermatrix" = "yes" ; then
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-		printf "%s\n" "yes" >&6; }
 
-	printf "%s\n" "#define FLA_ENABLE_SUPERMATRIX 1" >>confdefs.h
-elif test "$fla_enable_supermatrix" = "no" ; then
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
-		printf "%s\n" "no" >&6; }
-else
-	as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_SUPERMATRIX!" "$LINENO" 5
-fi
+
+
+
 
 		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether user requested enabling external LAPACK for small subproblems" >&5
 printf %s "checking whether user requested enabling external LAPACK for small subproblems... " >&6; }
@@ -6693,14 +6696,77 @@ printf "%s\n" "no" >&6; }
 				as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_EXTERNAL_LAPACK_INTERFACES!" "$LINENO" 5
 	fi
 
-	if test "$fla_enable_lapack2flame" = "yes" ; then
+
+
+
+
+
+		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether user requested SuperMatrix functionality" >&5
+printf %s "checking whether user requested SuperMatrix functionality... " >&6; }
+
+				# Check whether --enable-supermatrix was given.
+if test ${enable_supermatrix+y}
+then :
+  enableval=$enable_supermatrix;
+				if test "$enableval" = "no" ; then
+
+						fla_enable_supermatrix=no
+
+		elif test "$enableval" = "yes" ; then
+
+						fla_enable_supermatrix=yes
+		else
+
+												as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_SUPERMATRIX!" "$LINENO" 5
+		fi
+
+else $as_nop
+
+						fla_enable_supermatrix=no
+
+
+fi
+
+
+		if   test "$fla_enable_supermatrix" = "yes" ; then
+
+				{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+
+
+printf "%s\n" "#define FLA_ENABLE_SUPERMATRIX 1" >>confdefs.h
+
+
+	elif test "$fla_enable_supermatrix" = "no" ; then
+
+				{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+
+	else
+
+				as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_SUPERMATRIX!" "$LINENO" 5
+
+	fi
+
+
+
+
+
+
+
+
+
+
+
+
+		if test "$fla_enable_lapack2flame" = "yes" ; then
 		if test "$fla_enable_external_lapack_for_subproblems" = "yes" ; then
 			as_fn_error 1 "Configuring libflame to enable both lapack2flame and external-lapack-for-subproblems is not allowed. lapack2flame requires that external-lapack-for-subproblems be disabled. Please adjust your configure options accordingly and then re-run configure." "$LINENO" 5
 		fi
 	fi
 
-  if test "$fla_enable_lapack2flash" = "yes" ; then
-  	if test "$fla_enable_lapack2flame" = "yes" ; then
+		if test "$fla_enable_lapack2flash" = "yes" ; then
+		if test "$fla_enable_lapack2flame" = "yes" ; then
 			as_fn_error 1 "Configuring libflame to enable both lapack2flame and lapack2flash is not allowed. Please adjust your configure options accordingly and then re-run configure." "$LINENO" 5
 		fi
 		if test "$fla_enable_external_lapack_for_subproblems" = "yes" ; then
@@ -6711,7 +6777,7 @@ printf "%s\n" "no" >&6; }
 		fi
 	fi
 
-	if test "$fla_enable_lapack2flame" = "no" ; then
+		if test "$fla_enable_lapack2flame" = "no" ; then
 		if test "$fla_enable_external_lapack_for_subproblems" = "yes" ; then
 			if test "$fla_enable_external_lapack_interfaces" = "no" ; then
 				as_fn_error 1 "Configuring libflame to enable external-lapack-for-subproblems without external-lapack-interfaces is not allowed. external-lapack-for-subproblems requires that external-lapack-interfaces be enabled. Please adjust your configure options accordingly and then re-run configure." "$LINENO" 5
@@ -6905,6 +6971,62 @@ fi
 
 
 printf "%s\n" "#define FLA_MULTITHREADING_MODEL $fla_model_val" >>confdefs.h
+
+
+
+
+
+
+
+		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether user requested SuperMatrix functionality" >&5
+printf %s "checking whether user requested SuperMatrix functionality... " >&6; }
+
+				# Check whether --enable-supermatrix was given.
+if test ${enable_supermatrix+y}
+then :
+  enableval=$enable_supermatrix;
+				if test "$enableval" = "no" ; then
+
+						fla_enable_supermatrix=no
+
+		elif test "$enableval" = "yes" ; then
+
+						fla_enable_supermatrix=yes
+		else
+
+												as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_SUPERMATRIX!" "$LINENO" 5
+		fi
+
+else $as_nop
+
+						fla_enable_supermatrix=no
+
+
+fi
+
+
+		if   test "$fla_enable_supermatrix" = "yes" ; then
+
+				{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+
+
+printf "%s\n" "#define FLA_ENABLE_SUPERMATRIX 1" >>confdefs.h
+
+
+	elif test "$fla_enable_supermatrix" = "no" ; then
+
+				{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+
+	else
+
+				as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_SUPERMATRIX!" "$LINENO" 5
+
+	fi
+
+
+
 
 
 
