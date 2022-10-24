@@ -27,9 +27,6 @@ configuration:
   ./configure \
             --enable-lapack2flash \
             --enable-supermatrix \
-            --enable-hip \
-            --enable-vector-intrinsics=sse \
-            --enable-blis-use-of-fla-malloc \
             --enable-multithreading=pthreads \
 
 Note that supermatrix is required for lapack2flash
@@ -43,7 +40,7 @@ FLAPACK interface structure
 ---------------------------
 
 lapack2flash uses the same structure as lapack2flame. Operations are
-replaced with their FLASH equivalents. Doing so allows for GPU acceleration
+replaced with their FLASH equivalents. Doing so optionally allows for GPU acceleration
 when configured correctly. Set functions allow for setting number of threads, 
 depth (only a depth of 1 is currently supported), and blocksize. See below for
 supported interfaces. If an interface is not FLASH supported, it is simply using
