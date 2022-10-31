@@ -247,14 +247,14 @@ int FLAME_QR_piv_preorder( FLA_Obj A, int *jpiv_lapack, int *jpiv_fla )
 
 /*---------------------Get/Set Helper---------------------*/
 
-FLA_Error FLASH_set_blocksize( dim_t blocksize )
+FLA_Error FLASH_set_preferred_blocksize( dim_t blocksize )
 {
    flash_blocksize = blocksize;
 
    return FLA_SUCCESS;
 }
 
-dim_t FLASH_get_blocksize( void )
+dim_t FLASH_get_preferred_blocksize( void )
 {
    return flash_blocksize;
 }

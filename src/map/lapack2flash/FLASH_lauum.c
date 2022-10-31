@@ -39,7 +39,8 @@
   FLA_Uplo     uplo_fla;                                        \
   FLA_Obj      A;                                               \
   FLA_Error    init_result;                                     \
-  dim_t        blocksize = FLASH_get_blocksize();               \
+  dim_t        blocksize = min( FLASH_get_preferred_blocksize(),\
+                                *ldim_A );                      \
                                                                 \
   FLA_Init_safe( &init_result );                                \
                                                                 \
