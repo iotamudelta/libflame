@@ -20,9 +20,9 @@
 #define F77_fla_memory_leak_counter_set     F77_FUNC( fla_memory_leak_counter_set, FLA_MEMORY_LEAK_COUNTER_SET )
 #define F77_fla_obj_show                    F77_FUNC( fla_obj_show, FLA_OBJ_SHOW )
 
-static dim_t    flash_blocksize = 1024;
-static dim_t    flash_n_threads = 1;
-static dim_t    flash_depth = 1;
+static dim_t        flash_blocksize = 1024;
+static unsigned int flash_n_threads = 1;
+static dim_t        flash_depth = 1;
 
 void F77_fla_init()
 {
@@ -249,38 +249,42 @@ int FLAME_QR_piv_preorder( FLA_Obj A, int *jpiv_lapack, int *jpiv_fla )
 
 FLA_Error FLASH_set_preferred_blocksize( dim_t blocksize )
 {
-   flash_blocksize = blocksize;
+    flash_blocksize = blocksize;
 
-   return FLA_SUCCESS;
+    return FLA_SUCCESS;
 }
 
 dim_t FLASH_get_preferred_blocksize( void )
 {
-   return flash_blocksize;
+    return flash_blocksize;
 }
 
-FLA_Error FLASH_set_n_threads( dim_t threads )
+FLA_Error FLASH_set_n_preferred_threads( unsigned int threads )
 {
-   flash_n_threads = threads;
+    // Future use for hardware detection.
+    // Will put a check in to make sure threads do not exceed available hardware.
+    flash_n_threads = threads;
+    FLASH_Queue_set_num_threads( threads );
 
-   return FLA_SUCCESS;
+    return FLA_SUCCESS;
 }
 
-dim_t FLASH_get_n_threads( void )
+unsigned int FLASH_get_n_preferred_threads( void )
 {
-   return flash_n_threads;
+    // Returning the number of preferred threads, not actual number.
+    return flash_n_threads;
 }
 
 FLA_Error FLASH_set_depth( dim_t depth )
 {
-   flash_depth = depth;
+    flash_depth = depth;
 
-   return FLA_SUCCESS;
+    return FLA_SUCCESS;
 }
 
 dim_t FLASH_get_depth( void )
 {
-   return flash_depth;
+    return flash_depth;
 }
 
 #endif
