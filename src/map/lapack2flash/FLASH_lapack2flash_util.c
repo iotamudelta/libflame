@@ -261,10 +261,17 @@ dim_t FLASH_get_preferred_blocksize( void )
 
 FLA_Error FLASH_set_n_preferred_threads( unsigned int threads )
 {
-    // Future use for hardware detection.
-    // Will put a check in to make sure threads do not exceed available hardware.
     flash_n_threads = threads;
-    FLASH_Queue_set_num_threads( threads );
+
+    #ifdef FLA_ENABLE_HIP
+        int device_count = 1;
+        FLASH_Queue_available_devices_hip( &device_count );
+
+        // Pass number of threads unless it's more than available devices
+        FLASH_Queue_set_num_threads( min( threads, device_count) );
+    #else
+        FLASH_Queue_set_num_threads( threads );
+    #endif
 
     return FLA_SUCCESS;
 }
