@@ -18,7 +18,9 @@ print_usage()
 
 main()
 {
-	script_name=${0##*/}
+    # local variables
+    script_name=${0##*/}
+    src_dir="../c"
 
 	# Check the number of argements
 	if [ $# != "0" ]; then
@@ -39,11 +41,11 @@ main()
 
 		echo "  ${filename}"
 
-		echo "#ifdef FLA_ENABLE_XBLAS" > ${tmp_filename}
-		cat ${filename} >> ${tmp_filename}
-		echo "#endif" >> ${tmp_filename}
+		echo "#ifdef FLA_ENABLE_XBLAS" > ${src_dir}/${tmp_filename}
+		cat ${src_dir}/${filename} >> ${src_dir}/${tmp_filename}
+		echo "#endif" >> ${src_dir}/${tmp_filename}
 
-		mv ${tmp_filename} ${filename}
+		mv ${src_dir}/${tmp_filename} ${src_dir}/${filename}
 	done
 
 	return 0

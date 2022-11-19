@@ -3,7 +3,10 @@
 
 main()
 {
+    # local variables
     script_name=${0##*/}
+    src_dir="../c"
+
     echo " "
     echo " "
     echo " "${script_name}
@@ -16,8 +19,8 @@ main()
     
     if [ -f "$ast" ]
     then
-        astyle --style=allman *.c *.h    
-        rm -f *.orig
+        astyle --style=allman ${src_dir}/*.c ${src_dir}/*.h    
+        rm -f ${src_dir}/*.orig
     else
         echo "$ast is not found."
     fi

@@ -4,6 +4,7 @@ main()
 {
     # local variables
     script_name=${0##*/}
+    src_dir="../netlib"
 
     echo " "
     echo " "
@@ -35,9 +36,6 @@ main()
 ##        '1:LEN_TRIM( SRNAME )'                                '1' 
 ##        )
 
-    src_dir="../netlib"
-    one_tab="\t"
-
     # check src directory
     if [ ! -d "${src_dir}" ]; then
         echo "${script_name}: Source directory does not exist (${src_dir})."
@@ -45,7 +43,8 @@ main()
     fi
     
     # create a sed stack
-    files="$(find ${src_dir} -maxdepth 1 -name "*.f")"
+    # TODO, take care of f90 files before this
+    files="$(find ${src_dir} -maxdepth 1 -iname "*.f" -o -iname "*.f90")"
     stack="sed \"s/${words[0]}/${words[1]}/g\""
     for (( counter=2; counter<${#words[@]}; counter+=2 )); do
         stack="${stack} | sed \"s/${words[${counter}]}/${words[${counter}+1]}/g\""

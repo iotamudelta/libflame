@@ -2,7 +2,10 @@
 
 main() 
 {
+    # local variables
     script_name=${0##*/}
+    src_dir="../c"
+
     echo " "
     echo " "
     echo " "${script_name}
@@ -11,11 +14,10 @@ main()
     echo "   The script removes ftnlen-related arguments which are not necessary in lapack2flame."
     echo " "
 
-    files="$(find . -maxdepth 1 -name "*.c")"
-
+    files="$(find ${src_dir} -maxdepth 1 -name "*.c")"
     for file in ${files}; do
-        echo -ne "   Removing ftnlen from ... ${file}                  "\\r
-        tmp_file=$(echo "${file}.back")
+        echo -ne "   Removing ftnlen from ... ${src_dir}/${file}                  "\\r
+        tmp_file=$(echo "${src_dir}/${file}.back")
 
         # tr -s '\t\n' ' ' < ${file} \ # remove return and tab leading a single line source 
         # sed 's/;/;\'$'\n/g'            \ # add return after ;
@@ -33,7 +35,7 @@ main()
         # int s_cat(char *, char **, integer *, integer *, ftnlen);
         #     s_cat(ch__1, a__1, i__3, &c__2, (ftnlen)2);
 
-        ( tr -s '\t\n' ' ' < ${file} \
+        ( tr -s '\t\n' ' ' < ${src_dir}/${file} \
             | sed 's/;/;\'$'\n/g' \
             | sed 's/\((equiv_[0-9])\)/\1\'$'\n/g' \
             | sed 's/\(\#undef *[a-zA-Z]*\)/\1\'$'\n/g' \
@@ -43,10 +45,10 @@ main()
             | sed 's/  */\ /g' \
             | sed 's/, ftnlen *[0-9a-zA-Z_]*//g' \
             | sed 's/, ( *ftnlen) *[0-9]*//g' \
-            > ${tmp_file} ;
-            rm -f ${file}  ;
-            sed 's/, ftnlen//g' < ${tmp_file} > ${file} ;  # remove remainder of ftnlen used alone
-            rm -f ${tmp_file} ) 
+            > ${src_dir}/${tmp_file} ;
+            rm -f ${src_dir}/${file}  ;
+            sed 's/, ftnlen//g' < ${src_dir}/${tmp_file} > ${src_dir}/${file} ;  # remove remainder of ftnlen used alone
+            rm -f ${src_dir}/${tmp_file} ) 
     done
     return 0
 }

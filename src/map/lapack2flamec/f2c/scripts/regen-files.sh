@@ -3,7 +3,7 @@
 
 
 ## Clean up all
-rm -f *.c *~
+rm -f ../c/*.c ../c/*~
 rm -f ../netlib/*.f ../netlib/*~
 
 
@@ -21,21 +21,20 @@ rm -f ../netlib/*.f ../netlib/*~
 
 
 ## Run f2c 
-f2c -A -R -a ../netlib/*.f . 
-rm -f ._* ../netlib/*.f
-
-## Change temporary tweaks
-##  f90_cycle__() --> continue
-##  f90_exit__() --> break
-##  etc.
-./postprocess.sh
-
+f2c -A -R -a ../netlib/*.f ../netlib/*.F -d../c/
+rm -f ._* ../netlib/*.f ../netlib/*.F
 
 ## Remove ftnlen 
 ##  ftnlen arguments should be carefully removed to preserve correct fortran-level interfaces
 ##  most f2c'ed LAPACK routines do not need ftnlen arguments e.g., CHARACTER(1) do not need.
 ##  the script will replace the arguments and function definitions.
 ./remove_ftnlen.sh
+
+## Change temporary tweaks
+##  f90_cycle__() --> continue
+##  f90_exit__() --> break
+##  etc.
+./postprocess.sh
 
 ## Remove comma expressions
 ##  f2c generates comma expressions for max and min macros. Such an expression should be properly removed. 
