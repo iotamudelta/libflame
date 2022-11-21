@@ -1,16 +1,24 @@
 #!/bin/bash
 
-
+## Pass in a tar
+tar_file=$1
 
 ## Clean up all
 rm -f ../c/*.c ../c/*~
 rm -f ../netlib/*.f ../netlib/*~
 
-
-## xerbla.f and any .f using f90 intrinsic (maxloc) are not imported
-(cd ../netlib; tar -xvf 3.5.0.tar; rm -f ._*.f; cat support.list | xargs rm -f; cat install.list | xargs rm -f)
-##(cd ../netlib; tar -xvf 3.5.0.tar; rm -f ._*.f; cat install.list | xargs rm -f)
-
+## 
+if [[ "$tar_file" == *.tgz || "$tar_file" == *.tar.gz ]]
+then
+    (cd ../netlib; tar -xzvf $tar_file; rm -f ._*.f; cat support.list | xargs rm -f; cat install.list | xargs rm -f)
+elif [[ "$tar_file" == *.tar ]]
+then
+    ## xerbla.f and any .f using f90 intrinsic (maxloc) are not imported
+    (cd ../netlib; tar -xvf $tar_file; rm -f ._*.f; cat support.list | xargs rm -f; cat install.list | xargs rm -f)
+else
+    echo "Please pass a netlibs tar file as arg 1"
+    exit
+fi
 
 ## Polish fortran files.
 ##  Syntax error:  CHARACTER(1) --> CHARACTER
