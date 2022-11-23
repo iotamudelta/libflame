@@ -5,17 +5,19 @@ tar_file=$1
 
 ## Clean up all
 rm -f ../c/*.c ../c/*~
-rm -f ../netlib/*.f ../netlib/*.F ../netlib/*.f ../netlib/*.F90 ../netlib/*~
+rm -f ../netlib/*.[fF] ../netlib/*.[fF]90 ../netlib/*~
 rm -rf ../netlib/lapack-[0-9]*.[0-9]*.[0-9]*/
 
 ## 
 if [[ "$tar_file" == *.tgz || "$tar_file" == *.tar.gz ]]
 then
     (cd ../netlib; tar -xzf $tar_file ;
-    mv lapack-[0-9]*.[0-9]*.[0-9]*/SRC/*.f .;
+    cp lapack-[0-9]*.[0-9]*.[0-9]*/SRC/*.[fF] .;
+    cp lapack-[0-9]*.[0-9]*.[0-9]*/SRC/*.[fF]90 .;
     rm -f ._*.f;
     cat support.list | xargs rm -f;
     cat install.list | xargs rm -f)
+    full_tar=1
 elif [[ "$tar_file" == *.tar ]]
 then
     (cd ../netlib;
@@ -23,6 +25,7 @@ then
     rm -f ._*.f;
     cat support.list | xargs rm -f;
     cat install.list | xargs rm -f)
+    full_tar=0
 else
     echo "Please pass a netlibs tar file as arg 1"
     exit
@@ -36,7 +39,7 @@ fi
 ./preprosess.sh
 
 ## Run f2c 
-f2c -A -R -a ../netlib/*.f ../netlib/*.F -d../c/
+f2c -A -R -a ../netlib/*.[fF] -d../c/
 
 ## Remove ftnlen 
 ##  ftnlen arguments should be carefully removed to preserve correct fortran-level interfaces
@@ -64,8 +67,20 @@ f2c -A -R -a ../netlib/*.f ../netlib/*.F -d../c/
 ## Disable xblas-related code so shared libraries link properly.
 ./disable_xblas.sh
 
+## Updating netlibs-test
+if [[ "$full_tar" == 1 ]]
+then
+    new_test_dir=$(echo $tar_file | sed "s/\.tgz//" | sed "s/\.tar.gz//" | sed "s/\..\/netlib\///")
+    (cd ../../../../../netlib-test/;
+    ./create_new_testdir.sh ../src/map/lapack2flamec/f2c/netlib/$new_test_dir $new_test_dir;)
+else
+    echo " "
+    echo " Skipping netlibs test because they are not in the tar "
+    echo " "
+fi
+
 ## Cleanup
-rm -f ._* ../netlib/*.f ../netlib/*.F ../netlib/*.f ../netlib/*.F90
+rm -f ._* ../netlib/*.[fF] ../netlib/*.[fF]90
 rm -rf ../netlib/lapack-[0-9]*.[0-9]*.[0-9]*/
 
 echo " "
