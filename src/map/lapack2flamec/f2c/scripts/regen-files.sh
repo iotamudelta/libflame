@@ -5,16 +5,24 @@ tar_file=$1
 
 ## Clean up all
 rm -f ../c/*.c ../c/*~
-rm -f ../netlib/*.f ../netlib/*~
+rm -f ../netlib/*.f ../netlib/*.F ../netlib/*.f ../netlib/*.F90 ../netlib/*~
+rm -rf ../netlib/lapack-[0-9]*.[0-9]*.[0-9]*/
 
 ## 
 if [[ "$tar_file" == *.tgz || "$tar_file" == *.tar.gz ]]
 then
-    (cd ../netlib; tar -xzvf $tar_file; rm -f ._*.f; cat support.list | xargs rm -f; cat install.list | xargs rm -f)
+    (cd ../netlib; tar -xzf $tar_file ;
+    mv lapack-[0-9]*.[0-9]*.[0-9]*/SRC/*.f .;
+    rm -f ._*.f;
+    cat support.list | xargs rm -f;
+    cat install.list | xargs rm -f)
 elif [[ "$tar_file" == *.tar ]]
 then
-    ## xerbla.f and any .f using f90 intrinsic (maxloc) are not imported
-    (cd ../netlib; tar -xvf $tar_file; rm -f ._*.f; cat support.list | xargs rm -f; cat install.list | xargs rm -f)
+    (cd ../netlib;
+    tar -xf $tar_file;
+    rm -f ._*.f;
+    cat support.list | xargs rm -f;
+    cat install.list | xargs rm -f)
 else
     echo "Please pass a netlibs tar file as arg 1"
     exit
@@ -27,10 +35,8 @@ fi
 ##  etc.
 ./preprosess.sh
 
-
 ## Run f2c 
 f2c -A -R -a ../netlib/*.f ../netlib/*.F -d../c/
-rm -f ._* ../netlib/*.f ../netlib/*.F
 
 ## Remove ftnlen 
 ##  ftnlen arguments should be carefully removed to preserve correct fortran-level interfaces
@@ -52,14 +58,15 @@ rm -f ._* ../netlib/*.f ../netlib/*.F
 ## Generate a prototypes header
 ## ./headergen.sh
 
-
 ## Apply artistic style
 ./astyle.sh
-
 
 ## Disable xblas-related code so shared libraries link properly.
 ./disable_xblas.sh
 
+## Cleanup
+rm -f ._* ../netlib/*.f ../netlib/*.F ../netlib/*.f ../netlib/*.F90
+rm -rf ../netlib/lapack-[0-9]*.[0-9]*.[0-9]*/
 
 echo " "
 echo " Note that string-related f2c functions should not be used here (e.g., s_copy, s_cmp)."
