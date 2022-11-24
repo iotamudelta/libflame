@@ -67,15 +67,24 @@ f2c -A -R -a ../netlib/*.[fF] -d../c/
 ## Disable xblas-related code so shared libraries link properly.
 ./disable_xblas.sh
 
-## Updating netlibs-test
+## Updating other areas in libflame
 if [[ "$full_tar" == 1 ]]
 then
+    ## Get the name of the directory
     new_test_dir=$(echo $tar_file | sed "s/\.tgz//" | sed "s/\.tar.gz//" | sed "s/\..\/netlib\///")
+
+    ## Call the script that makes a new netlibs-test
     (cd ../../../../../netlib-test/;
-    ./create_new_testdir.sh ../src/map/lapack2flamec/f2c/netlib/$new_test_dir $new_test_dir;)
+    ./create_new_testdir.sh ../src/map/lapack2flamec/f2c/netlib/$new_test_dir $new_test_dir)
+
+    ## Regen the f2c in src/flablas/f2c/
+    (cd ../../../../flablas/f2c/;
+    rm -f *.[fF] *.[fF]90 *.c;
+    cp ../../map/lapack2flamec/f2c/netlib/$new_test_dir/BLAS/SRC/* .;
+    ./regen-files.sh)
 else
     echo " "
-    echo " Skipping netlibs test because they are not in the tar "
+    echo " Skipping other installs because they are not in the tar "
     echo " "
 fi
 
