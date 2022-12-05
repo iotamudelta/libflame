@@ -6,14 +6,14 @@ tar_file=$1
 ## Clean up all
 rm -f ../c/*.c ../c/*~
 rm -f ../netlib/*.[fF] ../netlib/*.[fF]90 ../netlib/*~
-rm -rf ../netlib/lapack-[0-9]*.[0-9]*.[0-9]*/
+rm -rf ../netlib/lapack-*/
 
 ## 
 if [[ "$tar_file" == *.tgz || "$tar_file" == *.tar.gz ]]
 then
     (cd ../netlib; tar -xzf $tar_file ;
-    cp lapack-[0-9]*.[0-9]*.[0-9]*/SRC/*.[fF] .;
-    cp lapack-[0-9]*.[0-9]*.[0-9]*/SRC/*.[fF]90 .;
+    cp lapack-*/SRC/*.[fF] .;
+    cp lapack-*/SRC/*.[fF]90 .;
     rm -f ._*.f;
     cat support.list | xargs rm -f;
     cat install.list | xargs rm -f)
@@ -90,7 +90,7 @@ fi
 
 ## Cleanup
 rm -f ._* ../netlib/*.[fF] ../netlib/*.[fF]90
-rm -rf ../netlib/lapack-[0-9]*.[0-9]*.[0-9]*/
+rm -rf ../netlib/lapack-*/
 
 echo " "
 echo " Note that string-related f2c functions should not be used here (e.g., s_copy, s_cmp)."
