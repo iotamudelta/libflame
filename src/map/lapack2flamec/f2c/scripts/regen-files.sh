@@ -31,41 +31,10 @@ else
     exit
 fi
 
-## Polish fortran files.
-##  Syntax error:  CHARACTER(1) --> CHARACTER
-##  F90 Support : CYCLE --> CALL F90_CYCLE (temporary)
-##  F90 Support : EXIT --> CALL F90_EXIT (temporary)
-##  etc.
-./preprosess.sh
-
-## Run f2c 
-f2c -A -R -a ../netlib/*.[fF] -d../c/
-
-## Remove ftnlen 
-##  ftnlen arguments should be carefully removed to preserve correct fortran-level interfaces
-##  most f2c'ed LAPACK routines do not need ftnlen arguments e.g., CHARACTER(1) do not need.
-##  the script will replace the arguments and function definitions.
-./remove_ftnlen.sh
-
-## Change temporary tweaks
-##  f90_cycle__() --> continue
-##  f90_exit__() --> break
-##  etc.
-./postprocess.sh
-
-## Remove comma expressions
-##  f2c generates comma expressions for max and min macros. Such an expression should be properly removed. 
-./remove_comma_expr.sh
-# ./remove_comma_abs.sh
-
-## Generate a prototypes header
-## ./headergen.sh
-
-## Apply artistic style
-./astyle.sh
-
-## Disable xblas-related code so shared libraries link properly.
-./disable_xblas.sh
+## Move to the lapack dir
+mkdir ../fortran/
+mv ../netlib/*.[fF] ../fortran/;
+mv ../netlib/*.[fF]90 ../fortran/;
 
 ## Updating other areas in libflame
 if [[ "$full_tar" == 1 ]]
