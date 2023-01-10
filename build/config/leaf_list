@@ -5,4 +5,5 @@ openflame:c
 lapack2flamec:c
 lapack2flash:c
 f2c:c
+fortran:f
 install:c

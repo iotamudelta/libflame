@@ -165,6 +165,9 @@ MK_LAPACK_FLAMEC_OBJS                       :=
 MK_MAP_LAPACK2FLAMEC_SRC                    :=
 MK_MAP_LAPACK2FLAMEC_OBJS                   :=
 
+MK_MAP_LAPACK2FLAMEC_FORTRAN_SRC            :=
+MK_MAP_LAPACK2FLAMEC_FORTRAN_OBJS           :=
+
 MK_MAP_LAPACK2FLAMEC_LAPACKSRC_SRC          :=
 MK_MAP_LAPACK2FLAMEC_LAPACKSRC_OBJS         :=
 
@@ -380,13 +383,16 @@ MK_BLAS_FLAMEC_OBJS                         := $(patsubst $(SRC_PATH)/%.c, $(BAS
 MK_LAPACK_FLAMEC_OBJS                       := $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.c, $(MK_LAPACK_FLAMEC_SRC)))
 
+#MK_MAP_LAPACK2FLAMEC_FORTRAN_OBJS           := $(patsubst $(SRC_PATH)/%.f, $(BASE_OBJ_PATH)/%.o, \
+                                                          $(filter %.f, $(MK_MAP_LAPACK2FLAMEC_FORTRAN_SRC)))
+
 MK_MAP_LAPACK2FLAMEC_OBJS                   := $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.c, $(MK_MAP_LAPACK2FLAMEC_SRC)))
 
 MK_MAP_LAPACK2FLAMEC_LAPACKSRC_OBJS         := $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.c, $(MK_MAP_LAPACK2FLAMEC_LAPACKSRC_SRC)))
 
-MK_MAP_LAPACK2FLAMEC_FLAMEC_OBJS  := $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
+MK_MAP_LAPACK2FLAMEC_FLAMEC_OBJS            := $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.c, $(MK_MAP_LAPACK2FLAMEC_FLAMEC_SRC)))
 
 MK_MAP_LAPACK2FLAMEC_LAPACKSRC_OBJS         := $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
@@ -414,9 +420,9 @@ MK_ALL_FLAMEC_OBJS        := $(MK_BASE_FLAMEC_OBJS) \
 # LAPACK
 ifeq ($(FLA_ENABLE_LAPACK2FLAME),yes)
 MK_ALL_FLAMEC_OBJS        := $(MK_MAP_LAPACK2FLAMEC_OBJS) \
+                             $(MK_MAP_LAPACK2FLAMEC_FORTRAN_OBJS) \
                              $(MK_MAP_LAPACK2FLAMEC_LAPACKSRC_OBJS) \
                              $(MK_MAP_LAPACK2FLAMEC_FLAMEC_OBJS) \
-                             $(MK_MAP_LAPACK2FLAMEC_LAPACKSRC_OBJS) \
                              $(MK_ALL_FLAMEC_OBJS)
 endif
 
@@ -556,7 +562,18 @@ endif
 ifeq ($(FLA_ENABLE_MAX_ARG_LIST_HACK),yes)
 	@echo $@ >> $(AR_OBJ_LIST_FILE)
 endif
-
+#Finally got here  gfortran -fallow-argument-mismatch -c $< -o $@    version of gfortran is old          upgrade docker to 22.04
+# Default compilation rules
+$(BASE_OBJ_PATH_F)/%.o: $(SRC_PATH)/%.f $(CONFIG_MK_FILE) $(HEADERS_TO_FLATTEN)
+ifeq ($(ENABLE_VERBOSE),yes)
+	gfortran -fallow-argument-mismatch -c $< -o $@ 
+else
+	@echo "Compiling $<"
+	@gfortran -fallow-argument-mismatch -c $< -o $@ 
+endif
+ifeq ($(FLA_ENABLE_MAX_ARG_LIST_HACK),yes)
+	@echo $@ >> $(AR_OBJ_LIST_FILE)
+endif
 
 # --- All-purpose library rule (static and shared) ---
 
