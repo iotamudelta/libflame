@@ -383,7 +383,7 @@ MK_BLAS_FLAMEC_OBJS                         := $(patsubst $(SRC_PATH)/%.c, $(BAS
 MK_LAPACK_FLAMEC_OBJS                       := $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.c, $(MK_LAPACK_FLAMEC_SRC)))
 
-#MK_MAP_LAPACK2FLAMEC_FORTRAN_OBJS           := $(patsubst $(SRC_PATH)/%.f, $(BASE_OBJ_PATH)/%.o, \
+MK_MAP_LAPACK2FLAMEC_FORTRAN_OBJS           := $(patsubst $(SRC_PATH)/%.f, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.f, $(MK_MAP_LAPACK2FLAMEC_FORTRAN_SRC)))
 
 MK_MAP_LAPACK2FLAMEC_OBJS                   := $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
@@ -562,14 +562,15 @@ endif
 ifeq ($(FLA_ENABLE_MAX_ARG_LIST_HACK),yes)
 	@echo $@ >> $(AR_OBJ_LIST_FILE)
 endif
-#Finally got here  gfortran -fallow-argument-mismatch -c $< -o $@    version of gfortran is old          upgrade docker to 22.04
-# Default compilation rules
-$(BASE_OBJ_PATH_F)/%.o: $(SRC_PATH)/%.f $(CONFIG_MK_FILE) $(HEADERS_TO_FLATTEN)
+
+# Default Fortran compilation rules
+# Might need -fallow-argument-mismatch for newer gfortran 
+$(BASE_OBJ_PATH)/%.o: $(SRC_PATH)/%.f $(CONFIG_MK_FILE) $(HEADERS_TO_FLATTEN)
 ifeq ($(ENABLE_VERBOSE),yes)
-	gfortran -fallow-argument-mismatch -c $< -o $@ 
+	gfortran -c $< -o $@
 else
 	@echo "Compiling $<"
-	@gfortran -fallow-argument-mismatch -c $< -o $@ 
+	@gfortran -c $< -o $@
 endif
 ifeq ($(FLA_ENABLE_MAX_ARG_LIST_HACK),yes)
 	@echo $@ >> $(AR_OBJ_LIST_FILE)
