@@ -57,6 +57,9 @@ else
     echo " "
 fi
 
+## Disable xblas-related code so shared libraries link properly.
+./disable_xblas.sh
+
 ## Cleanup
 rm -f ._* ../netlib/*.[fF] ../netlib/*.[fF]90
 rm -rf ../netlib/lapack-*/
