@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief <b> CPOSVXX computes the solution to system of linear equations A * X = B for PO matrices</b>
 *
 *  =========== DOCUMENTATION ===========
@@ -681,3 +682,4 @@
 *     End of CPOSVXX
 *
       END
+#endif

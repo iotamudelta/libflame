@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief \b CHERFSX
 *
 *  =========== DOCUMENTATION ===========
@@ -699,3 +700,4 @@
 *     End of CHERFSX
 *
       END
+#endif

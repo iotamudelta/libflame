@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief \b CPORFSX
 *
 *  =========== DOCUMENTATION ===========
@@ -692,3 +693,4 @@
 *     End of CPORFSX
 *
       END
+#endif

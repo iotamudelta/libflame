@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief \b SPORFSX
 *
 *  =========== DOCUMENTATION ===========
@@ -692,3 +693,4 @@
 *     End of SPORFSX
 *
       END
+#endif

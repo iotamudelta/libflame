@@ -567,10 +567,10 @@ endif
 # Might need -fallow-argument-mismatch for newer gfortran 
 $(BASE_OBJ_PATH)/%.o: $(SRC_PATH)/%.f $(CONFIG_MK_FILE) $(HEADERS_TO_FLATTEN)
 ifeq ($(ENABLE_VERBOSE),yes)
-	gfortran -c $< -o $@
+	gfortran -cpp -c $< -o $@
 else
 	@echo "Compiling $<"
-	@gfortran -c $< -o $@
+	@gfortran -cpp -c $< -o $@
 endif
 ifeq ($(FLA_ENABLE_MAX_ARG_LIST_HACK),yes)
 	@echo $@ >> $(AR_OBJ_LIST_FILE)

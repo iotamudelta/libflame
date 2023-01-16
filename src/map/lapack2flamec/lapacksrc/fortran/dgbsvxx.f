@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief <b> DGBSVXX computes the solution to system of linear equations A * X = B for GB matrices</b>
 *
 *  =========== DOCUMENTATION ===========
@@ -797,3 +798,4 @@
 *     End of DGBSVXX
 *
       END
+#endif

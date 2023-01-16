@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief \b ZGERFSX
 *
 *  =========== DOCUMENTATION ===========
@@ -733,3 +734,4 @@
 *     End of ZGERFSX
 *
       END
+#endif

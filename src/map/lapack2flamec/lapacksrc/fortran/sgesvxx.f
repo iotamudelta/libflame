@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief <b> SGESVXX computes the solution to system of linear equations A * X = B for GE matrices</b>
 *
 *  =========== DOCUMENTATION ===========
@@ -770,3 +771,4 @@
 *     End of SGESVXX
 
       END
+#endif

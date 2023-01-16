@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief <b> CHESVXX computes the solution to system of linear equations A * X = B for HE matrices</b>
 *
 *  =========== DOCUMENTATION ===========
@@ -698,3 +699,4 @@
 *     End of CHESVXX
 *
       END
+#endif

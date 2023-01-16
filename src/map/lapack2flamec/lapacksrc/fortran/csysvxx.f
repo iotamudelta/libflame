@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief <b> CSYSVXX computes the solution to system of linear equations A * X = B for SY matrices</b>
 *
 *  =========== DOCUMENTATION ===========
@@ -699,3 +700,4 @@
 *     End of CSYSVXX
 *
       END
+#endif

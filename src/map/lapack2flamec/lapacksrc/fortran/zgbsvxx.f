@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief <b> ZGBSVXX computes the solution to system of linear equations A * X = B for GB matrices</b>
 *
 *  =========== DOCUMENTATION ===========
@@ -798,3 +799,4 @@
 *     End of ZGBSVXX
 *
       END
+#endif

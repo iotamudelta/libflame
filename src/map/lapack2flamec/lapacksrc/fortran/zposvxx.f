@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief <b> ZPOSVXX computes the solution to system of linear equations A * X = B for PO matrices</b>
 *
 *  =========== DOCUMENTATION ===========
@@ -678,3 +679,4 @@
 *     End of ZPOSVXX
 *
       END
+#endif

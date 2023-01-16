@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief <b> SPOSVXX computes the solution to system of linear equations A * X = B for PO matrices</b>
 *
 *  =========== DOCUMENTATION ===========
@@ -684,3 +685,4 @@
 *     End of SPOSVXX
 *
       END
+#endif

@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief \b SSYSVXX
 *
 *  =========== DOCUMENTATION ===========
@@ -697,3 +698,4 @@
 *     End of SSYSVXX
 *
       END
+#endif

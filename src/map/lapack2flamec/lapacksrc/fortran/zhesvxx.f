@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief <b> ZHESVXX computes the solution to system of linear equations A * X = B for HE matrices</b>
 *
 *  =========== DOCUMENTATION ===========
@@ -695,3 +696,4 @@
 *     End of ZHESVXX
 *
       END
+#endif

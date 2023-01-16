@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief \b DSYRFSX
 *
 *  =========== DOCUMENTATION ===========
@@ -699,3 +700,4 @@
 *     End of DSYRFSX
 *
       END
+#endif

@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief \b ZLA_GERFSX_EXTENDED
 *
 *  =========== DOCUMENTATION ===========
@@ -697,3 +698,4 @@
 *
       RETURN
       END
+#endif

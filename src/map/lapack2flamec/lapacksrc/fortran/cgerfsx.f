@@ -1,3 +1,4 @@
+#ifdef FLA_ENABLE_XBLAS
 *> \brief \b CGERFSX
 *
 *  =========== DOCUMENTATION ===========
@@ -733,3 +734,4 @@
 *     End of CGERFSX
 *
       END
+#endif
