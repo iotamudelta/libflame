@@ -548,13 +548,13 @@ ifeq ($(FLA_ENABLE_MAX_ARG_LIST_HACK),yes)
 endif
 
 # Default Fortran compilation rules
-# Might need -fallow-argument-mismatch for newer gfortran 
+# Might need -fallow-argument-mismatch for newer gfortran (untested)
 $(BASE_OBJ_PATH)/%.o: $(SRC_PATH)/%.f $(CONFIG_MK_FILE) $(HEADERS_TO_FLATTEN)
 ifeq ($(ENABLE_VERBOSE),yes)
-	gfortran -cpp -c $< -o $@
+	$(F77) -cpp -c $< -o $@
 else
 	@echo "Compiling $<"
-	@gfortran -cpp -c $< -o $@
+	@$(F77) -cpp -c $< -o $@
 endif
 ifeq ($(FLA_ENABLE_MAX_ARG_LIST_HACK),yes)
 	@echo $@ >> $(AR_OBJ_LIST_FILE)
