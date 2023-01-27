@@ -697,6 +697,7 @@ fla_enable_blas3_front_end_cntl_trees
 fla_enable_supermatrix
 fla_enable_external_lapack_interfaces
 fla_enable_external_lapack_for_subproblems
+fla_enable_legacy_lapack
 fla_enable_lapack2flash
 fla_enable_lapack2flame
 fla_enable_builtin_blas
@@ -801,6 +802,7 @@ enable_non_critical_code
 enable_builtin_blas
 enable_lapack2flame
 enable_lapack2flash
+enable_legacy_lapack
 enable_external_lapack_for_subproblems
 enable_external_lapack_interfaces
 enable_supermatrix
@@ -1528,6 +1530,7 @@ Optional Features:
                           ENABLED while external-lapack-for-subproblems and
                           lapack2flame MUST be DISABLED. (Disabled by
                           default.)
+  --enable-legacy-lapack
   --enable-external-lapack-for-subproblems
                           Enable code that causes most of the
                           computationally-intensive functions within libflame
@@ -6592,6 +6595,48 @@ printf "%s\n" "#define FLA_ENABLE_LAPACK2FLASH 1" >>confdefs.h
 printf "%s\n" "no" >&6; }
 	else
 				as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LAPACK2FLASH!" "$LINENO" 5
+	fi
+
+
+
+
+
+
+		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether user requested the to use legacy lapack with lapack2flame or lapack2flash" >&5
+printf %s "checking whether user requested the to use legacy lapack with lapack2flame or lapack2flash... " >&6; }
+
+				# Check whether --enable-legacy_lapack was given.
+if test ${enable_legacy_lapack+y}
+then :
+  enableval=$enable_legacy_lapack;
+				if test "$enableval" = "no" ; then
+						fla_enable_legacy_lapack=no
+		elif test "$enableval" = "yes" ; then
+						fla_enable_legacy_lapack=yes
+		else
+												as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LEGACY_LAPACK!" "$LINENO" 5
+		fi
+
+else $as_nop
+
+						fla_enable_legacy_lapack=no
+
+
+fi
+
+
+		if   test "$fla_enable_legacy_lapack" = "yes" ; then
+				{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+
+
+printf "%s\n" "#define FLA_ENABLE_LEGACY_LAPACK 1" >>confdefs.h
+
+	elif test "$fla_enable_legacy_lapack" = "no" ; then
+				{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+	else
+				as_fn_error $? "Reached unreachable branch in FLA_CHECK_ENABLE_LEGACY_LAPACK!" "$LINENO" 5
 	fi
 
 

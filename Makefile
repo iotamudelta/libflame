@@ -174,6 +174,9 @@ MK_MAP_LAPACK2FLASH_OBJS					:=
 MK_MAP_FORTRAN_SRC							:=
 MK_MAP_FORTRAN_OBJS							:=
 
+MK_MAP_F2C_SRC								:=
+MK_MAP_F2C_OBJS								:=
+
 MK_MAP_INSTALL_SRC							:=
 MK_MAP_INSTALL_OBJS							:=
 
@@ -383,6 +386,9 @@ MK_MAP_LAPACK2FLASH_OBJS                    := $(patsubst $(SRC_PATH)/%.c, $(BAS
 MK_MAP_FORTRAN_OBJS							:= $(patsubst $(SRC_PATH)/%.f, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.f, $(MK_MAP_FORTRAN_SRC)))
 
+MK_MAP_F2C_OBJS								:= $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
+                                                          $(filter %.c, $(MK_MAP_F2C_SRC)))
+
 MK_MAP_INSTALL_OBJS							:= $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.c, $(MK_MAP_INSTALL_SRC)))
 
@@ -400,22 +406,39 @@ MK_ALL_FLAMEC_OBJS        := $(MK_BASE_FLAMEC_OBJS) \
 # Prepend the flablas source code files, if requested
 
 # LAPACK
+# Use legacy (3.5.0) f2c version of lapack
+# or default to the latest integrated version
+# Only build these when lapack2flame or lapack2flash is enabled
 ifeq ($(FLA_ENABLE_LAPACK2FLAME),yes)
 MK_ALL_FLAMEC_OBJS        := $(MK_MAP_LAPACK2FLAMEC_OBJS) \
-                             $(MK_MAP_FORTRAN_OBJS) \
                              $(MK_MAP_INSTALL_OBJS) \
                              $(MK_MAP_FLAMEC_OBJS) \
                              $(MK_MAP_LAPACKCHECK_OBJS) \
                              $(MK_ALL_FLAMEC_OBJS)
+
+ifeq ($(FLA_ENABLE_LEGACY_LAPACK),yes)
+MK_ALL_FLAMEC_OBJS        := $(MK_MAP_F2C_OBJS) \
+                             $(MK_ALL_FLAMEC_OBJS)
+else
+MK_ALL_FLAMEC_OBJS        := $(MK_MAP_FORTRAN_OBJS) \
+                             $(MK_ALL_FLAMEC_OBJS)
+endif
 endif
 
 ifeq ($(FLA_ENABLE_LAPACK2FLASH),yes)
 MK_ALL_FLAMEC_OBJS        := $(MK_MAP_LAPACK2FLASH_OBJS) \
-                             $(MK_MAP_FORTRAN_OBJS) \
                              $(MK_MAP_INSTALL_OBJS) \
                              $(MK_MAP_FLAMEC_OBJS) \
                              $(MK_MAP_LAPACKCHECK_OBJS) \
                              $(MK_ALL_FLAMEC_OBJS)
+
+ifeq ($(FLA_ENABLE_LEGACY_LAPACK),yes)
+MK_ALL_FLAMEC_OBJS        := $(MK_MAP_F2C_OBJS) \
+                             $(MK_ALL_FLAMEC_OBJS)
+else
+MK_ALL_FLAMEC_OBJS        := $(MK_MAP_FORTRAN_OBJS) \
+                             $(MK_ALL_FLAMEC_OBJS)
+endif
 endif
 
 # BLAS
