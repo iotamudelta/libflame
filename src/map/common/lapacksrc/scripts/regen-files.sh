@@ -1,72 +1,168 @@
 #!/bin/bash
 
-## Pass in a tar
-tar_file=$1
+usage() {
+    echo "  "
+    echo "  "
+    echo " This script has a few uses. It should be run from the scripts/ dir "
+    echo " Usage: ./regen-files.sh [Action, Required] [Path to lapack tar, optional] "
+    echo "  "
+    echo " Arg1: " 
+    echo "      'Build' This action is used by the libFlame Makefile at build "
+    echo "              time to extract the lapack fortran files "
+    echo "      'other_installs' This action can be used by a dev to extract netlibs-test "
+    echo "              and generate new f2c files in flablas/f2c "
+    echo "      'cleanup' This action is used by the libFlame Makefile at build "
+    echo "              to clean up any lapack fortran files that were used to build exeicutables "
+    echo "  "
+    echo " Arg2: "
+    echo "      '../netlib/lapack-X.X.X.tgz' This path should lead to the tar containing " 
+    echo "              the current version of lapack libFlame has installed. If no tar is given "
+    echo "              this script will look for one in ../netlibs "
+    echo "              If this script finds more than 1 tar, this script will error out "
+    echo "  "
+    echo "  "
+}
 
-## Clean up all
-rm -f ../c/*.c ../c/*~
-rm -f ../netlib/*.[fF] ../netlib/*.[fF]90 ../netlib/*~
-rm -rf ../netlib/lapack-*/
+clean() {
 
-## 
-if [[ "$tar_file" == *.tgz || "$tar_file" == *.tar.gz ]]
+    rm -f $script_dir/../netlib/._*
+    rm -f $script_dir/../netlib/*.[fF]
+    rm -f $script_dir/../netlib/*.[fF]90
+    rm -f $script_dir/../netlib/*~
+    rm -rf $script_dir/../netlib/lapack-*/
+    rm -f $script_dir/../fortran/*.[fF]
+    rm -f $script_dir/../fortran/*.[fF]90
+
+}
+
+## Pass an install type and a tar if needed
+install_type=$1
+tar_file=$2
+
+## Get current script dir
+script_dir=$(cd "$(dirname "$0")" && pwd)
+
+if [[ "$install_type" == "" || "$install_type" == help ]]
 then
-    (cd ../netlib; tar -xzf $tar_file ;
-    cp lapack-*/SRC/*.[fF] .;
-    cp lapack-*/SRC/*.[fF]90 .;
-    rm -f ._*.f;
-    cat support.list | xargs rm -f;
-    cat install.list | xargs rm -f)
-    full_tar=1
-elif [[ "$tar_file" == *.tar ]]
-then
-    (cd ../netlib;
-    tar -xf $tar_file;
-    rm -f ._*.f;
-    cat support.list | xargs rm -f;
-    cat install.list | xargs rm -f)
-    full_tar=0
-else
-    echo "Please pass a netlibs tar file as arg 1"
+    usage
     exit
 fi
 
-## Move to the lapack dir
-mkdir ../fortran/
-mv ../netlib/*.[fF] ../fortran/;
-mv ../netlib/*.[fF]90 ../fortran/;
-
-## Updating other areas in libflame
-if [[ "$full_tar" == 1 ]]
+if [[ "$tar_file" == "" && "$install_type" != "cleanup" ]]
 then
-    ## Get the name of the directory
-    new_test_dir=$(echo $tar_file | sed "s/\.tgz//" | sed "s/\.tar.gz//" | sed "s/\..\/netlib\///")
 
-    ## Call the script that makes a new netlibs-test
-    (cd ../../../../../netlib-test/;
-    ./create_new_testdir.sh ../src/map/lapack2flamec/f2c/netlib/$new_test_dir $new_test_dir)
+    ## Try to auto select a tar if the user doesn't provide one
+    num_of_tars=$(ls -1q ../netlib/*.tar ../netlib/*.tgz ../netlib/*.tar.gz 2> /dev/null | wc -l)
 
-    ## Regen the f2c in src/flablas/f2c/
-    (cd ../../../../flablas/f2c/;
-    rm -f *.[fF] *.[fF]90 *.c;
-    cp ../../map/lapack2flamec/f2c/netlib/$new_test_dir/BLAS/SRC/* .;
-    ./regen-files.sh)
-else
-    echo " "
-    echo " Skipping other installs because they are not in the tar "
-    echo " "
+    ## Check to make sure there is only one tar file in netlib/
+    ## If so, use it
+    if [[ "$num_of_tars" == 1 ]]
+    then
+        tar_file=$(ls $script_dir/../netlib/ | grep ".tar\|.tgz\|.tar.gz")
+        echo "No tar given, using $tar_file"
+    else
+        echo "Could not determine which tar to use."
+        usage
+        exit
+    fi
+
 fi
 
-## Disable xblas-related code so shared libraries link properly.
-./disable_xblas.sh
+if [[ "$install_type" == build || "$install_type" == other_installs ]]
+then
 
-## Cleanup
-rm -f ._* ../netlib/*.[fF] ../netlib/*.[fF]90
-rm -rf ../netlib/lapack-*/
+    ## Make sure there are no old files
+    clean
 
-echo " "
-echo " Note that string-related f2c functions should not be used here (e.g., s_copy, s_cmp)."
-echo " It is a total mess when an actual string is mixed in C and FORTRAN.                  "
-echo " s_cat is an exception and it is modified from the original definition in f2clib.     "
-echo " " 
-echo "                       Do not link against -lf2c.                                     "
+    if [[ "$install_type" == build ]]
+    then
+        ## Untar
+        ## It was observed that the tars had only the src files
+        ## While the tgz/tar.gz had the full netlibs. However, this
+        ## is not a guarantee. When adding a new netlibs tar, the dev
+        ## should verify this is still true
+        if [[ "$tar_file" == *.tgz || "$tar_file" == *.tar.gz ]]
+        then
+            cd $script_dir/../netlib
+            tar -xzf $tar_file
+            cp lapack-*/SRC/*.[fF] .
+            cp lapack-*/SRC/*.[fF]90 .
+            rm -f ._*.f
+            cat support.list | xargs rm -f
+            cat install.list | xargs rm -f
+        elif [[ "$tar_file" == *.tar ]]
+        then
+            cd $script_dir/../netlib
+            tar -xf $tar_file
+            rm -f ._*.f
+            cat support.list | xargs rm -f
+            cat install.list | xargs rm -f
+        else
+            echo "Please pass a netlibs tar file as arg 2"
+            exit
+        fi
+
+        ## Move to the lapack dir
+        mkdir ../fortran/
+        mv ../netlib/*.[fF] ../fortran/;
+        mv ../netlib/*.[fF]90 ../fortran/;
+
+        ## Disable xblas-related code so shared libraries link properly.
+        cd $script_dir
+        ./disable_xblas.sh
+
+    elif [[ "$install_type" == other_installs ]]
+    then
+        ## This section lets a user update netlibs-test and  
+        ## Updating other areas in libflame
+        ## It was observed that the tars had only the src files
+        ## While the tgz/tar.gz had the full netlibs. However, this
+        ## is not a guarantee. When adding a new netlibs tar, the dev
+        ## should verify this is still true
+        if [[ "$tar_file" == *.tgz || "$tar_file" == *.tar.gz ]]
+        then
+
+            cd $script_dir/../netlib
+            tar -xzf $tar_file
+
+            ## Get the name of the directory
+            new_test_dir=$(echo $tar_file | sed "s/\.tgz//" | sed "s/\.tar.gz//" | sed "s/\..\/netlib\///")
+
+            ## Call the script that makes a new netlibs-test flablas/f2c/
+            cd $script_dir/../../../../../netlib-test/
+            ./create_new_testdir.sh $script_dir/../netlib/$new_test_dir $new_test_dir
+
+            ## Regen the f2c in src/flablas/f2c/
+            cd $script_dir/../../../../flablas/f2c/
+            rm -f *.[fF] *.[fF]90 *.c
+            cp $script_dir/../netlib/$new_test_dir/BLAS/SRC/* .
+            ./regen-files.sh
+
+        else
+            echo " "
+            echo " Skipping other installs because they are not in the tar "
+            echo " "
+            exit
+        fi
+
+    else
+        echo "Unknown Error"
+        exit
+    fi
+
+    ## Cleanup
+    rm -f $script_dir/../netlib/._*
+    rm -f $script_dir/../netlib/*.[fF]
+    rm -f $script_dir/../netlib/*.[fF]90
+    rm -rf $script_dir/../netlib/lapack-*/
+
+elif [[ "$install_type" == cleanup ]]
+then
+
+    ## Cleanup
+    clean
+
+else
+    usage
+    exit
+fi
