@@ -52,7 +52,7 @@ if [[ "$tar_file" == "" && "$install_type" != "cleanup" ]]
 then
 
     ## Try to auto select a tar if the user doesn't provide one
-    num_of_tars=$(ls -1q ../netlib/*.tar ../netlib/*.tgz ../netlib/*.tar.gz 2> /dev/null | wc -l)
+    num_of_tars=$(ls -1q $script_dir/../netlib/*.tar $script_dir/../netlib/*.tgz $script_dir/../netlib/*.tar.gz 2> /dev/null | wc -l)
 
     ## Check to make sure there is only one tar file in netlib/
     ## If so, use it
@@ -103,9 +103,9 @@ then
         fi
 
         ## Move to the lapack dir
-        mkdir ../fortran/
-        mv ../netlib/*.[fF] ../fortran/;
-        mv ../netlib/*.[fF]90 ../fortran/;
+        mkdir $script_dir/../fortran/
+        mv $script_dir/../netlib/*.[fF] $script_dir/../fortran/
+        mv $script_dir/../netlib/*.[fF]90 $script_dir/../fortran/
 
         ## Disable xblas-related code so shared libraries link properly.
         cd $script_dir
@@ -160,9 +160,11 @@ elif [[ "$install_type" == cleanup ]]
 then
 
     ## Cleanup
+    echo "Cleaning up any files from lapack tar."
     clean
 
 else
+    echo "Invalid Arg."
     usage
     exit
 fi
