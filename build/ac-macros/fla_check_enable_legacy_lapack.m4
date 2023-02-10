@@ -7,7 +7,7 @@ AC_DEFUN([FLA_CHECK_ENABLE_LEGACY_LAPACK],
 	dnl --disable-<option>. If so, then run the first snippet of code;
 	dnl otherwise, run the second code block.
 	AC_ARG_ENABLE([legacy_lapack],
-		AS_HELP_STRING([--enable-legacy-lapack],[Compile and build into libflame the legacy f2c files of lapack (Version 3.5.0). If this option is not selected, the latest integrated version of lapack using the fortran files will be built. This option only works if the --enable-lapack2flash or --enable-lapack2flame are given. Otherwise no lapack will be built. (Disabled by default.)]),
+		AS_HELP_STRING([--enable-legacy-lapack],[Compile and build into libflame the legacy f2c files of LAPACK (Version 3.5.0). If this option is not selected, the latest integrated version of LAPACK using the fortran files will be built. This option only works if the --enable-lapack2flash or --enable-lapack2flame are given. Otherwise no LAPACK will be built. (Disabled by default.)]),
     [
 		dnl If any form of the option is given, handle each case.
 		if test "$enableval" = "no" ; then

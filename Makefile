@@ -153,38 +153,38 @@ endif
 # --- Main target variable definitions ----------------------------------------
 #
 
-MK_BASE_FLAMEC_SRC                          :=
-MK_BASE_FLAMEC_OBJS                         :=
+MK_BASE_FLAMEC_SRC                   :=
+MK_BASE_FLAMEC_OBJS                  :=
 
-MK_BLAS_FLAMEC_SRC                          :=
-MK_BLAS_FLAMEC_OBJS                         :=
+MK_BLAS_FLAMEC_SRC                   :=
+MK_BLAS_FLAMEC_OBJS                  :=
 
-MK_LAPACK_FLAMEC_SRC                        :=
-MK_LAPACK_FLAMEC_OBJS                       :=
+MK_LAPACK_FLAMEC_SRC                 :=
+MK_LAPACK_FLAMEC_OBJS                :=
 
-MK_FLABLAS_F2C_SRC                          :=
-MK_FLABLAS_F2C_OBJS                         :=
+MK_FLABLAS_F2C_SRC                   :=
+MK_FLABLAS_F2C_OBJS                  :=
 
-MK_MAP_LAPACK2FLAMEC_SRC                    :=
-MK_MAP_LAPACK2FLAMEC_OBJS                   :=
+MK_MAP_LAPACK2FLAMEC_SRC             :=
+MK_MAP_LAPACK2FLAMEC_OBJS            :=
 
-MK_MAP_LAPACK2FLASH_SRC						:=
-MK_MAP_LAPACK2FLASH_OBJS					:=
+MK_MAP_LAPACK2FLASH_SRC              :=
+MK_MAP_LAPACK2FLASH_OBJS             :=
 
-MK_MAP_FORTRAN_SRC							:=
-MK_MAP_FORTRAN_OBJS							:=
+MK_MAP_FORTRAN_SRC                   :=
+MK_MAP_FORTRAN_OBJS                  :=
 
-MK_MAP_F2C_SRC								:=
-MK_MAP_F2C_OBJS								:=
+MK_MAP_F2C_SRC                       :=
+MK_MAP_F2C_OBJS                      :=
 
-MK_MAP_INSTALL_SRC							:=
-MK_MAP_INSTALL_OBJS							:=
+MK_MAP_INSTALL_SRC                   :=
+MK_MAP_INSTALL_OBJS                  :=
 
-MK_MAP_FLAMEC_SRC							:=
-MK_MAP_FLAMEC_OBJS							:=
+MK_MAP_FLAMEC_SRC                    :=
+MK_MAP_FLAMEC_OBJS                   :=
 
-MK_MAP_LAPACKCHECK_SRC						:=
-MK_MAP_LAPACKCHECK_OBJS						:=
+MK_MAP_LAPACKCHECK_SRC               :=
+MK_MAP_LAPACKCHECK_OBJS              :=
 
 # --- Define install target names for static libraries ---
 
@@ -383,19 +383,19 @@ MK_MAP_LAPACK2FLAMEC_OBJS                   := $(patsubst $(SRC_PATH)/%.c, $(BAS
 MK_MAP_LAPACK2FLASH_OBJS                    := $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.c, $(MK_MAP_LAPACK2FLASH_SRC)))
 
-MK_MAP_FORTRAN_OBJS							:= $(patsubst $(SRC_PATH)/%.f, $(BASE_OBJ_PATH)/%.o, \
+MK_MAP_FORTRAN_OBJS                         := $(patsubst $(SRC_PATH)/%.f, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.f, $(MK_MAP_FORTRAN_SRC)))
 
-MK_MAP_F2C_OBJS								:= $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
+MK_MAP_F2C_OBJS                             := $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.c, $(MK_MAP_F2C_SRC)))
 
-MK_MAP_INSTALL_OBJS							:= $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
+MK_MAP_INSTALL_OBJS                         := $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.c, $(MK_MAP_INSTALL_SRC)))
 
-MK_MAP_FLAMEC_OBJS							:= $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
+MK_MAP_FLAMEC_OBJS                          := $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.c, $(MK_MAP_FLAMEC_SRC)))
 
-MK_MAP_LAPACKCHECK_OBJS						:= $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
+MK_MAP_LAPACKCHECK_OBJS                     := $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.c, $(MK_MAP_LAPACKCHECK_SRC)))
 
 # Combine the base, blas, and lapack libraries.

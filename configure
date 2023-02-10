@@ -1531,11 +1531,11 @@ Optional Features:
                           lapack2flame MUST be DISABLED. (Disabled by
                           default.)
   --enable-legacy-lapack  Compile and build into libflame the legacy f2c files
-                          of lapack (Version 3.5.0). If this option is not
-                          selected, the latest integrated version of lapack
+                          of LAPACK (Version 3.5.0). If this option is not
+                          selected, the latest integrated version of LAPACK
                           using the fortran files will be built. This option
                           only works if the --enable-lapack2flash or
-                          --enable-lapack2flame are given. Otherwise no lapack
+                          --enable-lapack2flame are given. Otherwise no LAPACK
                           will be built. (Disabled by default.)
   --enable-external-lapack-for-subproblems
                           Enable code that causes most of the
