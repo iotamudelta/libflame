@@ -26,12 +26,11 @@ usage() {
 clean() {
 
     rm -f $script_dir/../netlib/._*
-    rm -f $script_dir/../netlib/*.[fF]
-    rm -f $script_dir/../netlib/*.[fF]90
+    rm -f $script_dir/../netlib/*.{f,F,f90,F90}
     rm -f $script_dir/../netlib/*~
     rm -rf $script_dir/../netlib/lapack-*/
-    rm -f $script_dir/../fortran/*.[fF]
-    rm -f $script_dir/../fortran/*.[fF]90
+    rm -f $script_dir/../fortran/*.{f,F,f90,F90}
+    rm -f $script_dir/../fortran/depen_mods/*.{f,F,f90,F90}
 
 }
 
@@ -52,7 +51,7 @@ if [[ "$tar_file" == "" && "$install_type" != "cleanup" ]]
 then
 
     ## Try to auto select a tar if the user doesn't provide one
-    num_of_tars=$(ls -1q $script_dir/../netlib/*.tar $script_dir/../netlib/*.tgz $script_dir/../netlib/*.tar.gz 2> /dev/null | wc -l)
+    num_of_tars=$(ls -1q $script_dir/../netlib/*.{tar,tgz,tar.gz} 2> /dev/null | wc -l)
 
     ## Check to make sure there is only one tar file in netlib/
     ## If so, use it
@@ -85,8 +84,7 @@ then
         then
             cd $script_dir/../netlib
             tar -xzf $tar_file
-            cp lapack-*/SRC/*.[fF] .
-            cp lapack-*/SRC/*.[fF]90 .
+            cp lapack-*/SRC/*.{f,F,f90,F90} .
             rm -f ._*.f
             cat support.list | xargs rm -f
             cat install.list | xargs rm -f
@@ -104,8 +102,7 @@ then
 
         ## Move to the lapack dir
         mkdir $script_dir/../fortran/
-        mv $script_dir/../netlib/*.[fF] $script_dir/../fortran/
-        mv $script_dir/../netlib/*.[fF]90 $script_dir/../fortran/
+        mv $script_dir/../netlib/*.{f,F,f90,F90} $script_dir/../fortran/
 
         ## Disable xblas-related code so shared libraries link properly.
         cd $script_dir
@@ -134,7 +131,7 @@ then
 
             ## Regen the f2c in src/flablas/f2c/
             cd $script_dir/../../../../flablas/f2c/
-            rm -f *.[fF] *.[fF]90 *.c
+            rm -f *.{f,F,f90,F90} *.c
             cp $script_dir/../netlib/$new_test_dir/BLAS/SRC/* .
             ./regen-files.sh
 
@@ -152,8 +149,7 @@ then
 
     ## Cleanup
     rm -f $script_dir/../netlib/._*
-    rm -f $script_dir/../netlib/*.[fF]
-    rm -f $script_dir/../netlib/*.[fF]90
+    rm -f $script_dir/../netlib/*.{f,F,f90,F90}
     rm -rf $script_dir/../netlib/lapack-*/
 
 elif [[ "$install_type" == cleanup ]]
