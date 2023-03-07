@@ -30,7 +30,7 @@
 #
 #######################################################################
 
-TOPSRCDIR = ../..
+TOPSRCDIR = ${CURDIR}/../..
 include $(TOPSRCDIR)/make.inc
 
 SCATGEN = slatm1.o slatm7.o slaran.o slarnd.o
@@ -60,7 +60,7 @@ ALLOBJ = $(SMATGEN) $(CMATGEN) $(SCATGEN) $(DMATGEN) $(ZMATGEN) \
 	$(DZATGEN)
 
 $(TMGLIB): $(ALLOBJ)
-	$(AR) $(ARFLAGS) $@ $^
+	$(AR) $(ARFLAGS) -o $@ $^
 	$(RANLIB) $@
 
 .PHONY: single complex double complex16

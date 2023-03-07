@@ -29,9 +29,9 @@ LDFLAGS =
 #  The archiver and the flag(s) to use when building an archive
 #  (library).  If your system has no ranlib, set RANLIB = echo.
 #
-AR = ar
-ARFLAGS = cr
-RANLIB = ranlib
+AR = $(CC)
+ARFLAGS = -lm -shared
+RANLIB = echo
 
 #  Timer for the SECOND and DSECND routines
 #
@@ -74,10 +74,10 @@ TIMER = INT_ETIME
 #  machine-specific, optimized BLAS library should be used whenever
 #  possible.)
 #
-BLASLIB      = $(TOPSRCDIR)/libblas.a
+BLASLIB      = $(TOPSRCDIR)/libblas.so
 CBLASLIB     = $(TOPSRCDIR)/libcblas.a
-LAPACKLIB    = $(TOPSRCDIR)/liblapack.a -lpthread
-TMGLIB       = $(TOPSRCDIR)/libtmglib.a
+LAPACKLIB    = $(TOPSRCDIR)/liblapack.so
+TMGLIB       = $(TOPSRCDIR)/libtmglib.so
 LAPACKELIB   = $(TOPSRCDIR)/liblapacke.a
 
 #  DOCUMENTATION DIRECTORY

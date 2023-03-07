@@ -1,4 +1,4 @@
-TOPSRCDIR = ..
+TOPSRCDIR = ${CURDIR}/..
 include $(TOPSRCDIR)/make.inc
 
 .PHONY: all testlsame testslamch testdlamch testsecond testdsecnd testieee testversion test_zcomplexabs test_zcomplexdiv test_zcomplexmult test_zminMax
@@ -21,7 +21,7 @@ testdsecnd: dsecnd_$(TIMER).o dsecndtst.o
 	@echo "[INFO] : TIMER value: $(TIMER) (given by make.inc)"
 	$(FC) $(FFLAGS) $(LDFLAGS) -o $@ $^
 
-testieee: tstiee.o $(TOPSRCDIR)/SRC/ieeeck.o $(TOPSRCDIR)/SRC/ilaenv.o $(TOPSRCDIR)/SRC/iparmq.o
+testieee: tstiee.o $(LAPACKLIB) $(BLASLIB)
 	$(FC) $(FFLAGS) $(LDFLAGS) -o $@ $^
 
 testversion: ilaver.o LAPACK_version.o

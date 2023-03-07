@@ -53,7 +53,7 @@
 #
 #######################################################################
 
-TOPSRCDIR = ../..
+TOPSRCDIR = ${CURDIR}/../..
 include $(TOPSRCDIR)/make.inc
 
 .SUFFIXES: .F .f90 .o

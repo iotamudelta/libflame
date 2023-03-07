@@ -34,7 +34,7 @@
 #
 #######################################################################
 
-TOPSRCDIR = ..
+TOPSRCDIR = ${CURDIR}/..
 include $(TOPSRCDIR)/make.inc
 
 .PHONY: all

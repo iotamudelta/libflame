@@ -85,6 +85,8 @@ then
             cd $script_dir/../netlib
             tar -xzf $tar_file
             cp lapack-*/SRC/*.{f,F,f90,F90} .
+            cp lapack-*/INSTALL/*roundup_lwork.{f,F,f90,F90} .
+            cp lapack-*/INSTALL/ilaver.{f,F,f90,F90} .
             rm -f ._*.f
             cat support.list | xargs rm -f
             cat install.list | xargs rm -f

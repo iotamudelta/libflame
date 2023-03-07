@@ -356,8 +356,10 @@ CPPFLAGS        := $(CPPFLAGS) $(INCLUDE_PATHS)
 FFLAGS          := $(FFLAGS) $(INCLUDE_PATHS)
 
 FDEPS_PATH      := $(DIST_PATH)/src/map/common/lapacksrc/fortran
-FDEPS           := $(FDEPS_PATH)/la_constants.f90 $(FDEPS_PATH)/la_xisnan.F90
-FOREXT          := f F f90 F90
+FDEPS1          := $(FDEPS_PATH)/la_constants.f90
+FDEPS2          := $(FDEPS_PATH)/la_xisnan.F90
+FDEPS           := $(FDEPS1) $(FDEPS2)
+FORT_EXT        := %.f %.F %.f90 %.F90
 
 #
 # --- Library object definitions -----------------------------------------------
@@ -385,14 +387,8 @@ MK_MAP_LAPACK2FLAMEC_OBJS                   := $(patsubst $(SRC_PATH)/%.c, $(BAS
 MK_MAP_LAPACK2FLASH_OBJS                    := $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.c, $(MK_MAP_LAPACK2FLASH_SRC)))
 
-MK_MAP_FORTRAN_OBJS                         := $(patsubst $(SRC_PATH)/%.f, $(BASE_OBJ_PATH)/%.o, \
-                                                          $(filter %.f, $(MK_MAP_FORTRAN_SRC)))
-MK_MAP_FORTRAN_OBJS                         += $(patsubst $(SRC_PATH)/%.F, $(BASE_OBJ_PATH)/%.o, \
-                                                          $(filter %.F, $(MK_MAP_FORTRAN_SRC)))
-MK_MAP_FORTRAN_OBJS                         += $(patsubst $(SRC_PATH)/%.F90, $(BASE_OBJ_PATH)/%.o, \
-                                                          $(filter %.F90, $(MK_MAP_FORTRAN_SRC)))
-MK_MAP_FORTRAN_OBJS                         += $(patsubst $(SRC_PATH)/%.f90, $(BASE_OBJ_PATH)/%.o, \
-                                                          $(filter %.f90, $(MK_MAP_FORTRAN_SRC)))
+MK_MAP_FORTRAN_OBJS                         := $(foreach F_EXT, $(FORT_EXT), $(patsubst $(SRC_PATH)/$(F_EXT), $(BASE_OBJ_PATH)/%.o, \
+                                                          $(filter $(FORT_EXT), $(filter-out $(FDEPS), $(MK_MAP_FORTRAN_SRC)))))
 
 MK_MAP_F2C_OBJS                             := $(patsubst $(SRC_PATH)/%.c, $(BASE_OBJ_PATH)/%.o, \
                                                           $(filter %.c, $(MK_MAP_F2C_SRC)))
@@ -500,13 +496,6 @@ ifeq ($(MAKEFILE_FRAGMENTS_PRESENT),no)
 endif
 
 # --- Cosolidated header creation ---
-build-deps:
-ifeq ($(ENABLE_VERBOSE),yes)
-	gfortran -cpp -c $(FDEPS)
-else
-	@echo "Building $(FDEPS)"
-	@gfortran -cpp -c $(FDEPS)
-endif
 
 flat-headers: check-env $(FLAME_H_FLAT) $(BLIS1_H_FLAT) $(FLAF2C_H_FLAT)
 
@@ -585,39 +574,70 @@ ifeq ($(FLA_ENABLE_MAX_ARG_LIST_HACK),yes)
 	@echo $@ >> $(AR_OBJ_LIST_FILE)
 endif
 
-
-
 # Default Fortran compilation rules
 # Might need -fallow-argument-mismatch for newer gfortran (untested)
-$(BASE_OBJ_PATH)/%.o: $(SRC_PATH)/%.f $(CONFIG_MK_FILE) $(HEADERS_TO_FLATTEN) build-deps
+$(BASE_OBJ_PATH)/%.o: $(SRC_PATH)/%.f $(CONFIG_MK_FILE) $(HEADERS_TO_FLATTEN) $(BASE_OBJ_PATH)/la_xisnan.mod
 ifeq ($(ENABLE_VERBOSE),yes)
 	gfortran -cpp -c $< -o $@
 else
 	@echo "Compiling $<"
 	@gfortran -cpp -c $< -o $@
 endif
-$(BASE_OBJ_PATH)/%.o: $(SRC_PATH)/%.F $(CONFIG_MK_FILE) $(HEADERS_TO_FLATTEN) build-deps
-ifeq ($(ENABLE_VERBOSE),yes)
-	gfortran -cpp -c $< -o $@
-else
-	@echo "Compiling $<"
-	@gfortran -cpp -c $< -o $@
-endif
-$(BASE_OBJ_PATH)/%.o: $(SRC_PATH)/%.F90 $(CONFIG_MK_FILE) $(HEADERS_TO_FLATTEN) build-deps
-ifeq ($(ENABLE_VERBOSE),yes)
-	gfortran -cpp -c $< -o $@
-else
-	@echo "Compiling $<"
-	@gfortran -cpp -c $< -o $@
-endif
-$(BASE_OBJ_PATH)/%.o: $(SRC_PATH)/%.f90 $(CONFIG_MK_FILE) $(HEADERS_TO_FLATTEN) build-deps
-ifeq ($(ENABLE_VERBOSE),yes)
-	gfortran -cpp -c $< -o $@
-else
-	@echo "Compiling $<"
-	@gfortran -cpp -c $< -o $@
+ifeq ($(FLA_ENABLE_MAX_ARG_LIST_HACK),yes)
+	@echo $@ >> $(AR_OBJ_LIST_FILE)
 endif
 
+$(BASE_OBJ_PATH)/%.o: $(SRC_PATH)/%.F $(CONFIG_MK_FILE) $(HEADERS_TO_FLATTEN) $(BASE_OBJ_PATH)/la_xisnan.mod
+ifeq ($(ENABLE_VERBOSE),yes)
+	gfortran -cpp -c $< -o $@
+else
+	@echo "Compiling $<"
+	@gfortran -cpp -c $< -o $@
+endif
+ifeq ($(FLA_ENABLE_MAX_ARG_LIST_HACK),yes)
+	@echo $@ >> $(AR_OBJ_LIST_FILE)
+endif
+
+$(BASE_OBJ_PATH)/%.o: $(SRC_PATH)/%.F90 $(CONFIG_MK_FILE) $(HEADERS_TO_FLATTEN) $(BASE_OBJ_PATH)/la_xisnan.mod
+ifeq ($(ENABLE_VERBOSE),yes)
+	gfortran -cpp -c $< -o $@
+else
+	@echo "Compiling $<"
+	@gfortran -cpp -c $< -o $@
+endif
+ifeq ($(FLA_ENABLE_MAX_ARG_LIST_HACK),yes)
+	@echo $@ >> $(AR_OBJ_LIST_FILE)
+endif
+
+$(BASE_OBJ_PATH)/%.o: $(SRC_PATH)/%.f90 $(CONFIG_MK_FILE) $(HEADERS_TO_FLATTEN) $(BASE_OBJ_PATH)/la_xisnan.mod
+ifeq ($(ENABLE_VERBOSE),yes)
+	gfortran -cpp -c $< -o $@
+else
+	@echo "Compiling $<"
+	@gfortran -cpp -c $< -o $@
+endif
+ifeq ($(FLA_ENABLE_MAX_ARG_LIST_HACK),yes)
+	@echo $@ >> $(AR_OBJ_LIST_FILE)
+endif
+
+$(BASE_OBJ_PATH)/la_xisnan.mod: $(FDEPS2) $(BASE_OBJ_PATH)/la_constants.mod
+ifeq ($(ENABLE_VERBOSE),yes)
+	gfortran -cpp -c $< -o $@
+else
+	@echo "Building $<"
+	@gfortran -cpp -c $< -o $@
+endif
+ifeq ($(FLA_ENABLE_MAX_ARG_LIST_HACK),yes)
+	@echo $@ >> $(AR_OBJ_LIST_FILE)
+endif
+
+$(BASE_OBJ_PATH)/la_constants.mod: $(FDEPS1)
+ifeq ($(ENABLE_VERBOSE),yes)
+	gfortran -cpp -c $< -o $@
+else
+	@echo "Building $<"
+	@gfortran -cpp -c $< -o $@
+endif
 ifeq ($(FLA_ENABLE_MAX_ARG_LIST_HACK),yes)
 	@echo $@ >> $(AR_OBJ_LIST_FILE)
 endif

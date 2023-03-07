@@ -31,7 +31,7 @@
 #
 ########################################################################
 
-TOPSRCDIR = ../..
+TOPSRCDIR = ${CURDIR}/../..
 include $(TOPSRCDIR)/make.inc
 
 AEIGTST = \
