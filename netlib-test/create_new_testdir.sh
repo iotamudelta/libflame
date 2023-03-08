@@ -109,20 +109,19 @@ main()
 
 	# Update makefiles to have the correct path
 	# There was an issue where the path is given during linking 
-	# as a relitive path. Then when run, it is from a different
+	# as a relitive path. Then when run, it is executed from a different
 	# dir. This would cause it to fail
 	for make_file in BLAS/SRC/Makefile INSTALL/Makefile TESTING/Makefile TESTING/EIG/Makefile TESTING/LIN/Makefile TESTING/MATGEN/Makefile
 	do
 		sed -i 's/TOPSRCDIR = ../TOPSRCDIR = ${CURDIR}\/../' ${testdir_new}/$make_file
 	done
 
-	# Adding the -o flag needed to link
+	# Adding the '-o' flag needed to link
 	sed -i 's/$(AR) $(ARFLAGS) $@ $^/$(AR) $(ARFLAGS) -o $@ $^/' ${testdir_new}/TESTING/MATGEN/Makefile
 
-	# TODO
+	# Updating these to point to libflame instead of internal files
 	sed -i 's/testieee: tstiee.o .*/testieee: tstiee.o $(LAPACKLIB) $(BLASLIB)/' ${testdir_new}/INSTALL/Makefile
 
-	# TODO
 	sed -i 's/schkaa.o: schkaa.F/schkaa.o: schkaa.F $(LAPACKLIB) $(BLASLIB)/' ${testdir_new}/TESTING/LIN/Makefile
 	sed -i 's/dchkaa.o: dchkaa.F/dchkaa.o: dchkaa.F $(LAPACKLIB) $(BLASLIB)/' ${testdir_new}/TESTING/LIN/Makefile
 	sed -i 's/cchkaa.o: cchkaa.F/cchkaa.o: cchkaa.F $(LAPACKLIB) $(BLASLIB)/' ${testdir_new}/TESTING/LIN/Makefile
