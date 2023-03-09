@@ -19,7 +19,7 @@
         flat-headers \
         test \
         install-headers install-libs install-lib-symlinks \
-        clean cleanmk cleanh cleanlib cleanleaves distclean \
+        clean cleanmk cleanh cleanlib cleanleaves distclean clean-netlib-tests \
         install \
         uninstall-libs uninstall-lib-symlinks uninstall-headers
 
@@ -355,6 +355,7 @@ CFLAGS_NOOPT    := $(CFLAGS_NOOPT) $(INCLUDE_PATHS)
 CPPFLAGS        := $(CPPFLAGS) $(INCLUDE_PATHS)
 FFLAGS          := $(FFLAGS) $(INCLUDE_PATHS)
 
+SCRIPTS_PATH    := $(DIST_PATH)/src/map/common/lapacksrc/scripts
 FDEPS_PATH      := $(DIST_PATH)/src/map/common/lapacksrc/fortran
 FDEPS1          := $(FDEPS_PATH)/la_constants.f90
 FDEPS2          := $(FDEPS_PATH)/la_xisnan.F90
@@ -813,6 +814,15 @@ else
 	@$(MV) $(@F) $(INSTALL_LIBDIR)/
 endif
 
+# --- Install-netlibs-test dir ---
+
+install-netlib-tests:
+ifeq ($(ENABLE_VERBOSE),yes)
+	$(SCRIPTS_PATH)/regen-files.sh build_test
+else
+	@echo "Installing netlib-tests"
+	@$(SCRIPTS_PATH)/regen-files.sh build_test
+endif
 
 # --- Clean rules ---
 
@@ -917,6 +927,16 @@ ifeq ($(ENABLE_VERBOSE),yes)
 else
 	@echo "Removing leaf-level build objects from source tree"
 	@$(FIND) $(BASE_OBJ_PATH) -name "*.[osx]" | $(XARGS) $(RM_F)
+endif
+endif
+
+clean-netlib-tests:
+ifeq ($(IS_CONFIGURED),yes)
+ifeq ($(ENABLE_VERBOSE),yes)
+	$(SCRIPTS_PATH)/regen-files.sh clean_tests
+else
+	@echo "Removing netlib-tests"
+	@$(SCRIPTS_PATH)/regen-files.sh clean_tests
 endif
 endif
 
