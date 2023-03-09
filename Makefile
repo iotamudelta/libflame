@@ -817,11 +817,21 @@ endif
 # --- Install-netlibs-test dir ---
 
 install-netlib-tests:
+ifeq ($(FLA_ENABLE_LAPACK2FLAME),yes)
 ifeq ($(ENABLE_VERBOSE),yes)
 	$(SCRIPTS_PATH)/regen-files.sh build_test
 else
 	@echo "Installing netlib-tests"
 	@$(SCRIPTS_PATH)/regen-files.sh build_test
+endif
+endif
+ifeq ($(FLA_ENABLE_LAPACK2FLASH),yes)
+ifeq ($(ENABLE_VERBOSE),yes)
+	$(SCRIPTS_PATH)/regen-files.sh build_test
+else
+	@echo "Installing netlib-tests"
+	@$(SCRIPTS_PATH)/regen-files.sh build_test
+endif
 endif
 
 # --- Clean rules ---
