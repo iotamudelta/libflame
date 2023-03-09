@@ -70,6 +70,9 @@ main()
 	mkdir ./${testdir_new}/SRC
 	cp ./build/SRC-Makefile ./${testdir_new}/SRC/Makefile
 
+	# Adding README
+	cp ./build/README ./${testdir_new}/
+
 	# Make a dummy 'SRC/VARIANTS' directory with a dummy Makefile.
 	mkdir ./${testdir_new}/SRC/VARIANTS
 	cp ./build/SRC-VARIANTS-Makefile ./${testdir_new}/SRC/VARIANTS/Makefile
