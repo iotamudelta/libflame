@@ -18,7 +18,7 @@
         check-env check-env-config check-env-fragments \
         flat-headers \
         test \
-        install-headers install-libs install-lib-symlinks \
+        install-headers install-libs install-lib-symlinks install-netlib-tests\
         clean cleanmk cleanh cleanlib cleanleaves distclean clean-netlib-tests \
         install \
         uninstall-libs uninstall-lib-symlinks uninstall-headers
@@ -474,11 +474,11 @@ all: libs
 
 libs: libflame
 
-install: libs install-libs install-lib-symlinks install-headers
+install: libs install-libs install-lib-symlinks install-headers install-netlib-tests
 
 uninstall: uninstall-libs uninstall-lib-symlinks uninstall-headers
 
-clean: cleanh cleanobj cleanlib
+clean: cleanh cleanobj cleanlib clean-netlib-tests
 
 
 
@@ -933,10 +933,10 @@ endif
 clean-netlib-tests:
 ifeq ($(IS_CONFIGURED),yes)
 ifeq ($(ENABLE_VERBOSE),yes)
-	$(SCRIPTS_PATH)/regen-files.sh clean_tests
+	$(SCRIPTS_PATH)/regen-files.sh clean_test
 else
 	@echo "Removing netlib-tests"
-	@$(SCRIPTS_PATH)/regen-files.sh clean_tests
+	@$(SCRIPTS_PATH)/regen-files.sh clean_test
 endif
 endif
 
