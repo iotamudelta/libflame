@@ -862,9 +862,11 @@ cleanobj:
 ifeq ($(IS_CONFIGURED),yes)
 ifeq ($(ENABLE_VERBOSE),yes)
 	- $(FIND) $(BASE_OBJ_PATH) -name "*.o" | $(XARGS) $(RM_F)
+	- $(FIND) $(BASE_OBJ_PATH) -name "*.mod" | $(XARGS) $(RM_F)
 else
 	@echo "Removing object files from $(BASE_OBJ_PATH)"
 	@$(FIND) $(BASE_OBJ_PATH) -name "*.o" | $(XARGS) $(RM_F)
+	@$(FIND) $(BASE_OBJ_PATH) -name "*.mod" | $(XARGS) $(RM_F)
 endif
 endif
 
