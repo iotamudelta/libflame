@@ -241,4 +241,25 @@ int FLAME_QR_piv_preorder( FLA_Obj A, int *jpiv_lapack, int *jpiv_fla )
 }
 */
 
+void FLASH_Check_Offload_to_GPU( dim_t blocksize, int m, int n, unsigned int offset )
+{
+    #ifdef FLA_ENABLE_HIP
+        // 'offset' is the number of tiles where it crosses over from CPU to GPU offloading
+        // Checking to see if the area of m and n is more than X tiles. Ex, blocksize = 10, m = 30, n =30  (9 tiles)
+        // Checking if m is more than X tiles long. Ex, blocksize = 10, m = 41, n =1 (5 tiles)
+        // Checking if n is more than X tiles long. Ex, blocksize = 10, m = 1, n =41 (5 tiles)
+        // If it is less than X tiles (starting with 4 tiles) then do not off load
+        if ( blocksize * blocksize * offset < m * n ||
+             blocksize             * offset < m     ||
+             blocksize             * offset <     n )
+        {
+            FLASH_Queue_enable_hip();
+        }
+        else
+        {
+            FLASH_Queue_disable_hip();
+        }
+    #endif
+}
+
 #endif

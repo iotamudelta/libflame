@@ -19,6 +19,8 @@ FLA_Error      FLASH_set_n_preferred_threads( unsigned int threads );
 unsigned int   FLASH_get_n_preferred_threads( void );
 FLA_Error      FLASH_set_depth( dim_t depth );
 dim_t          FLASH_get_depth( void );
+FLA_Error      FLASH_set_tile_offload( unsigned int tiles );
+unsigned int   FLASH_get_tile_offload( void );
 
 #endif // End lapack2flash
 

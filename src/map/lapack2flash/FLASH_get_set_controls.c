@@ -15,6 +15,7 @@
 static dim_t        flash_blocksize = 1024;
 static unsigned int flash_n_threads = 1;
 static dim_t        flash_depth = 1;
+static unsigned int flash_tiles = 4;
 
 /*---------------------Get/Set Helper---------------------*/
 
@@ -63,6 +64,18 @@ FLA_Error FLASH_set_depth( dim_t depth )
 dim_t FLASH_get_depth( void )
 {
     return flash_depth;
+}
+
+FLA_Error FLASH_set_tile_offload( unsigned int tiles )
+{
+    flash_tiles = tiles;
+
+    return FLA_SUCCESS;
+}
+
+unsigned int FLASH_get_tile_offload( void )
+{
+    return flash_tiles;
 }
 
 #endif // End lapack2flash
