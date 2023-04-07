@@ -241,7 +241,7 @@ int FLAME_QR_piv_preorder( FLA_Obj A, int *jpiv_lapack, int *jpiv_fla )
 }
 */
 
-void FLASH_Check_Offload_to_GPU( dim_t blocksize, int m, int n, unsigned int offset )
+FLA_Bool FLASH_Check_Offload_to_GPU( dim_t blocksize, int m, int n, unsigned int offset )
 {
     #ifdef FLA_ENABLE_HIP
         // 'offset' is the number of tiles where it crosses over from CPU to GPU offloading
@@ -253,11 +253,47 @@ void FLASH_Check_Offload_to_GPU( dim_t blocksize, int m, int n, unsigned int off
              blocksize             * offset < m     ||
              blocksize             * offset <     n )
         {
-            FLASH_Queue_enable_hip();
+            if (!FLASH_Queue_get_enabled_hip())
+            {
+                // If hip is not enabled, enable it
+                FLASH_Queue_enable_hip();
+
+                // Return 1 saying we need to flip this back after the FLASH_ call
+                return TRUE;
+            }
         }
         else
         {
-            FLASH_Queue_disable_hip();
+            if (FLASH_Queue_get_enabled_hip())
+            {
+                // If hip is enabled, disable it
+                FLASH_Queue_disable_hip();
+
+                // Return 1 saying we need to flip this back after the FLASH_ call
+                return TRUE;
+            }
+        }
+    #endif
+
+    // Return 0 saying we doing need to flip this back
+    return FALSE;
+}
+
+void FLASH_Toggle_GPU_Offload( FLA_Bool toggle )
+{
+    #ifdef FLA_ENABLE_HIP
+        if ( toggle )
+        {
+            if (FLASH_Queue_get_enabled_hip())
+            {
+                // If hip is enabled, disable it
+                FLASH_Queue_disable_hip();
+            }
+            else
+            {
+                // If hip is not enabled, enable it
+                FLASH_Queue_enable_hip();
+            }
         }
     #endif
 }

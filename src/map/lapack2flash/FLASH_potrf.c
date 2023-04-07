@@ -45,8 +45,8 @@
   dim_t        blocksize = min( FLASH_get_preferred_blocksize(),\
                                 *ldim_A );                      \
                                                                 \
-  FLASH_Check_Offload_to_GPU( blocksize, *n, *n,                \
-                              FLASH_get_tile_offload() );       \
+  FLA_Bool toggle = FLASH_Check_Offload_to_GPU( blocksize, *n,  \
+                          *n, FLASH_get_tile_offload() );       \
                                                                 \
   FLA_Init_safe( &init_result );                                \
   FLA_Param_map_netlib_to_flame_uplo( uplo, &uplo_fla );        \
@@ -62,6 +62,8 @@
   e_val = FLASH_Chol( uplo_fla, A );                            \
                                                                 \
   FLASH_Obj_free_without_buffer( &A );                          \
+                                                                \
+  FLASH_Toggle_GPU_Offload( toggle );                           \
                                                                 \
   FLA_Finalize_safe( init_result );                             \
                                                                 \

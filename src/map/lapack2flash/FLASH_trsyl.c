@@ -72,6 +72,10 @@
   else             sgn_fla = FLA_MINUS_ONE;                     \
                                                                 \
   blocksize = ( FLASH_get_preferred_blocksize(), *ldim_A );     \
+                                                                \
+  FLA_Bool toggle = FLASH_Check_Offload_to_GPU( blocksize, *m,  \
+                          *n, FLASH_get_tile_offload() );       \
+                                                                \
   FLASH_Obj_create_without_buffer( datatype,                    \
                                    *m,                          \
                                    *m,                          \
@@ -119,6 +123,8 @@
   FLASH_Obj_free_without_buffer( &B );                          \
   FLASH_Obj_free_without_buffer( &C );                          \
   FLASH_Obj_free_without_buffer( &scale_fla );                  \
+                                                                \
+  FLASH_Toggle_GPU_Offload( toggle );                           \
                                                                 \
   FLA_Finalize_safe( init_result );                             \
                                                                 \
