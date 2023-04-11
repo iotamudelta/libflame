@@ -124,9 +124,9 @@
   FLASH_Obj_free_without_buffer( &C );                          \
   FLASH_Obj_free_without_buffer( &scale_fla );                  \
                                                                 \
-  FLASH_Toggle_GPU_Offload( toggle );                           \
-                                                                \
   FLA_Finalize_safe( init_result );                             \
+                                                                \
+  FLASH_Toggle_GPU_Offload( toggle );                           \
                                                                 \
   if ( e_val != FLA_SUCCESS ) *info = 1;                        \
   else                        *info = 0;                        \
