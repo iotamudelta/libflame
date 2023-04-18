@@ -12,10 +12,10 @@
 
 #ifdef FLA_ENABLE_LAPACK2FLASH // Start lapack2flash
 
-static dim_t        flash2lapack_flash_blocksize = 1024;
-static unsigned int flash2lapack_flash_n_threads = 1;
-static dim_t        flash2lapack_flash_depth = 1;
-static unsigned int flash2lapack_flash_tiles = 16;
+static dim_t        lapack2flash_blocksize = 1024;
+static unsigned int lapack2flash_n_threads = 1;
+static dim_t        lapack2flash_depth = 1;
+static unsigned int lapack2flash_tiles = 16;
 
 /*---------------------Get/Set Helper---------------------*/
 
@@ -23,7 +23,7 @@ FLA_Error FLASH_set_preferred_blocksize( dim_t blocksize )
 {
     if ( blocksize != 0 )
     {
-        flash2lapack_flash_blocksize = blocksize;
+        lapack2flash_blocksize = blocksize;
 
         return FLA_SUCCESS;
     }
@@ -35,14 +35,14 @@ FLA_Error FLASH_set_preferred_blocksize( dim_t blocksize )
 
 dim_t FLASH_get_preferred_blocksize( void )
 {
-    return flash2lapack_flash_blocksize;
+    return lapack2flash_blocksize;
 }
 
 FLA_Error FLASH_set_n_preferred_threads( unsigned int threads )
 {
     if ( threads != 0 )
     {
-        flash2lapack_flash_n_threads = threads;
+        lapack2flash_n_threads = threads;
 
         #ifdef FLA_ENABLE_HIP
             int device_count = 1;
@@ -65,14 +65,14 @@ FLA_Error FLASH_set_n_preferred_threads( unsigned int threads )
 unsigned int FLASH_get_n_preferred_threads( void )
 {
     // Returning the number of preferred threads, not actual number.
-    return flash2lapack_flash_n_threads;
+    return lapack2flash_n_threads;
 }
 
 FLA_Error FLASH_set_depth( dim_t depth )
 {
     if ( depth != 0 )
     {
-        flash2lapack_flash_depth = depth;
+        lapack2flash_depth = depth;
 
         return FLA_SUCCESS;
     }
@@ -84,19 +84,19 @@ FLA_Error FLASH_set_depth( dim_t depth )
 
 dim_t FLASH_get_depth( void )
 {
-    return flash2lapack_flash_depth;
+    return lapack2flash_depth;
 }
 
 FLA_Error FLASH_set_tile_offload( unsigned int tiles )
 {
-    flash2lapack_flash_tiles = tiles;
+    lapack2flash_tiles = tiles;
 
     return FLA_SUCCESS;
 }
 
 unsigned int FLASH_get_tile_offload( void )
 {
-    return flash2lapack_flash_tiles;
+    return lapack2flash_tiles;
 }
 
 #endif // End lapack2flash
