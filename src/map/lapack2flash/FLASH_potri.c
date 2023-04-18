@@ -39,7 +39,7 @@
   dim_t        blocksize = min( FLASH_get_preferred_blocksize(),\
                                 *ldim_A );                      \
                                                                 \
-  FLA_Bool toggle = FLASH_Check_Offload_to_GPU( blocksize, *n,  \
+  FLA_Bool toggle = FLASH_Check_offload_to_gpu( blocksize, *n,  \
                           *n, FLASH_get_tile_offload() );       \
                                                                 \
   FLA_Init_safe( &init_result );                                \
@@ -64,7 +64,7 @@
                                                                 \
   FLA_Finalize_safe( init_result );                             \
                                                                 \
-  FLASH_Toggle_GPU_Offload( toggle );                           \
+  FLASH_Toggle_gpu_offload( toggle );                           \
                                                                 \
   return 0;
 

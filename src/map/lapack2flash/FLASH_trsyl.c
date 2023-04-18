@@ -73,7 +73,7 @@
                                                                 \
   blocksize = ( FLASH_get_preferred_blocksize(), *ldim_A );     \
                                                                 \
-  FLA_Bool toggle = FLASH_Check_Offload_to_GPU( blocksize, *m,  \
+  FLA_Bool toggle = FLASH_Check_offload_to_gpu( blocksize, *m,  \
                           *n, FLASH_get_tile_offload() );       \
                                                                 \
   FLASH_Obj_create_without_buffer( datatype,                    \
@@ -126,7 +126,7 @@
                                                                 \
   FLA_Finalize_safe( init_result );                             \
                                                                 \
-  FLASH_Toggle_GPU_Offload( toggle );                           \
+  FLASH_Toggle_gpu_offload( toggle );                           \
                                                                 \
   if ( e_val != FLA_SUCCESS ) *info = 1;                        \
   else                        *info = 0;                        \

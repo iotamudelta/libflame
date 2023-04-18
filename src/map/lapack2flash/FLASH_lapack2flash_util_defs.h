@@ -85,7 +85,7 @@ extern int FLAME_invert_ztau( FLA_Obj t );
 
 extern int FLAME_QR_piv_preorder( FLA_Obj A, int *jpiv_lapack, int *jpiv_fla );
 
-FLA_Bool FLASH_Check_Offload_to_GPU( dim_t blocksize, int m, int n, unsigned int offset );
-void FLASH_Toggle_GPU_Offload( FLA_Bool toggle );
+FLA_Bool FLASH_Check_offload_to_gpu( dim_t blocksize, int m, int n, unsigned int crossover );
+void FLASH_Toggle_gpu_offload( FLA_Bool toggle );
 
 #endif

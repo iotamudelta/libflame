@@ -241,12 +241,12 @@ int FLAME_QR_piv_preorder( FLA_Obj A, int *jpiv_lapack, int *jpiv_fla )
 }
 */
 
-FLA_Bool FLASH_Check_Offload_to_GPU( dim_t blocksize, int m, int n, unsigned int offset )
+FLA_Bool FLASH_Check_offload_to_gpu( dim_t blocksize, int m, int n, unsigned int crossover )
 {
     #ifdef FLA_ENABLE_HIP
-        // 'offset' is the number of tiles where it crosses over from CPU to GPU offloading
+        // 'crossover' is the number of tiles where it crosses over from CPU to GPU offloading
         // Checking to see if the area of m and n is less than X tiles and hip is enabled. If so, disable
-        if ( ( blocksize * blocksize * offset > m * n ) && FLASH_Queue_get_enabled_hip() )
+        if ( ( blocksize * blocksize * crossover > m * n ) && FLASH_Queue_get_enabled_hip() )
         {
             FLASH_Queue_disable_hip();
 
@@ -264,7 +264,7 @@ FLA_Bool FLASH_Check_Offload_to_GPU( dim_t blocksize, int m, int n, unsigned int
     return FALSE;
 }
 
-void FLASH_Toggle_GPU_Offload( FLA_Bool toggle )
+void FLASH_Toggle_gpu_offload( FLA_Bool toggle )
 {
     #ifdef FLA_ENABLE_HIP
         if ( toggle )
