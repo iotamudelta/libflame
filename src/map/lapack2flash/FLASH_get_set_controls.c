@@ -12,70 +12,91 @@
 
 #ifdef FLA_ENABLE_LAPACK2FLASH // Start lapack2flash
 
-static dim_t        flash_blocksize = 1024;
-static unsigned int flash_n_threads = 1;
-static dim_t        flash_depth = 1;
-static unsigned int flash_tiles = 4;
+static dim_t        flash2lapack_flash_blocksize = 1024;
+static unsigned int flash2lapack_flash_n_threads = 1;
+static dim_t        flash2lapack_flash_depth = 1;
+static unsigned int flash2lapack_flash_tiles = 16;
 
 /*---------------------Get/Set Helper---------------------*/
 
 FLA_Error FLASH_set_preferred_blocksize( dim_t blocksize )
 {
-    flash_blocksize = blocksize;
+    if ( blocksize != 0 )
+    {
+        flash2lapack_flash_blocksize = blocksize;
 
-    return FLA_SUCCESS;
+        return FLA_SUCCESS;
+    }
+    else
+    {
+        return FLA_FAILURE;
+    }
 }
 
 dim_t FLASH_get_preferred_blocksize( void )
 {
-    return flash_blocksize;
+    return flash2lapack_flash_blocksize;
 }
 
 FLA_Error FLASH_set_n_preferred_threads( unsigned int threads )
 {
-    flash_n_threads = threads;
+    if ( threads != 0 )
+    {
+        flash2lapack_flash_n_threads = threads;
 
-    #ifdef FLA_ENABLE_HIP
-        int device_count = 1;
-        FLASH_Queue_available_devices_hip( &device_count );
+        #ifdef FLA_ENABLE_HIP
+            int device_count = 1;
+            FLASH_Queue_available_devices_hip( &device_count );
 
-        // Pass number of threads unless it's more than available devices
-        FLASH_Queue_set_num_threads( min( threads, device_count) );
-    #else
-        FLASH_Queue_set_num_threads( threads );
-    #endif
+            // Pass number of threads unless it's more than available devices
+            FLASH_Queue_set_num_threads( min( threads, device_count) );
+        #else
+            FLASH_Queue_set_num_threads( threads );
+        #endif
 
-    return FLA_SUCCESS;
+        return FLA_SUCCESS;
+    }
+    else
+    {
+        return FLA_FAILURE;
+    }
 }
 
 unsigned int FLASH_get_n_preferred_threads( void )
 {
     // Returning the number of preferred threads, not actual number.
-    return flash_n_threads;
+    return flash2lapack_flash_n_threads;
 }
 
 FLA_Error FLASH_set_depth( dim_t depth )
 {
-    flash_depth = depth;
+    if ( depth != 0 )
+    {
+        flash2lapack_flash_depth = depth;
 
-    return FLA_SUCCESS;
+        return FLA_SUCCESS;
+    }
+    else
+    {
+        return FLA_FAILURE;
+    }
 }
 
 dim_t FLASH_get_depth( void )
 {
-    return flash_depth;
+    return flash2lapack_flash_depth;
 }
 
 FLA_Error FLASH_set_tile_offload( unsigned int tiles )
 {
-    flash_tiles = tiles;
+    flash2lapack_flash_tiles = tiles;
 
     return FLA_SUCCESS;
 }
 
 unsigned int FLASH_get_tile_offload( void )
 {
-    return flash_tiles;
+    return flash2lapack_flash_tiles;
 }
 
 #endif // End lapack2flash

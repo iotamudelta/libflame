@@ -245,37 +245,22 @@ FLA_Bool FLASH_Check_Offload_to_GPU( dim_t blocksize, int m, int n, unsigned int
 {
     #ifdef FLA_ENABLE_HIP
         // 'offset' is the number of tiles where it crosses over from CPU to GPU offloading
-        // Checking to see if the area of m and n is more than X tiles. Ex, blocksize = 10, m = 30, n =30  (9 tiles)
-        // Checking if m is more than X tiles long. Ex, blocksize = 10, m = 41, n =1 (5 tiles)
-        // Checking if n is more than X tiles long. Ex, blocksize = 10, m = 1, n =41 (5 tiles)
-        // If it is less than X tiles (starting with 4 tiles) then do not off load
-        if ( blocksize * blocksize * offset < m * n ||
-             blocksize             * offset < m     ||
-             blocksize             * offset <     n )
+        // Checking to see if the area of m and n is less than X tiles and hip is enabled. If so, disable
+        if ( ( blocksize * blocksize * offset > m * n ) && FLASH_Queue_get_enabled_hip() )
         {
-            if (!FLASH_Queue_get_enabled_hip())
-            {
-                // If hip is not enabled, enable it
-                FLASH_Queue_enable_hip();
+            FLASH_Queue_disable_hip();
 
-                // Return 1 saying we need to flip this back after the FLASH_ call
-                return TRUE;
-            }
+            // Return 1 saying we need to flip this back after the FLASH_ call
+            return TRUE;
         }
         else
         {
-            if (FLASH_Queue_get_enabled_hip())
-            {
-                // If hip is enabled, disable it
-                FLASH_Queue_disable_hip();
-
-                // Return 1 saying we need to flip this back after the FLASH_ call
-                return TRUE;
-            }
+            // Return 0 saying we do not need to flip this back after the FLASH_ call
+            return FALSE;
         }
     #endif
 
-    // Return 0 saying we doing need to flip this back
+    // Return 0 saying we do not need to flip this back because FLA_ENABLE_HIP is not configured
     return FALSE;
 }
 
