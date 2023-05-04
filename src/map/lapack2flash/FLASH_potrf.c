@@ -63,9 +63,9 @@
                                                                 \
   FLASH_Obj_free_without_buffer( &A );                          \
                                                                 \
-  FLASH_Toggle_gpu_offload( toggle );                           \
-                                                                \
   FLA_Finalize_safe( init_result );                             \
+                                                                \
+  FLASH_Toggle_gpu_offload( toggle );                           \
                                                                 \
   if ( e_val != FLA_SUCCESS ) *info = e_val + 1;                \
   else                        *info = 0;                        \

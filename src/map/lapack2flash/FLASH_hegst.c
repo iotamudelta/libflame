@@ -1,6 +1,7 @@
 /*
 
     Copyright (C) 2014, The University of Texas at Austin
+    Copyright (C) 2023, Advanced Micro Devices, Inc.
 
     This file is part of libflame and is available under the 3-Clause
     BSD license, which can be found in the LICENSE file at the top-level
@@ -35,14 +36,17 @@
   FLA_Uplo     uplo_fla;                                        \
   FLA_Obj      A, B;                                            \
   FLA_Error    init_result;                                     \
-  dim_t        blocksize;                                       \
+  dim_t        blocksize = min( FLASH_get_preferred_blocksize(),\
+                                *ldim_A );                      \
+                                                                \
+  FLA_Bool toggle = FLASH_Check_offload_to_gpu( blocksize, *m,  \
+                          *m, FLASH_get_tile_offload() );       \
                                                                 \
   FLA_Init_safe( &init_result );                                \
                                                                 \
   FLA_Param_map_netlib_to_flame_inv( itype, &inv_fla );         \
   FLA_Param_map_netlib_to_flame_uplo( uplo, &uplo_fla );        \
                                                                 \
-  blocksize = min( FLASH_get_preferred_blocksize(), *ldim_A );  \
   FLASH_Obj_create_without_buffer( datatype,                    \
                                    *m,                          \
                                    *m,                          \
@@ -51,7 +55,6 @@
                                    &A );                        \
   FLASH_Obj_attach_buffer( buff_A, 1, *ldim_A, &A );            \
                                                                 \
-  blocksize = min( FLASH_get_preferred_blocksize(), *ldim_B );  \
   FLASH_Obj_create_without_buffer( datatype,                    \
                                    *m,                          \
                                    *m,                          \
@@ -66,6 +69,8 @@
   FLASH_Obj_free_without_buffer( &B );                          \
                                                                 \
   FLA_Finalize_safe( init_result );                             \
+                                                                \
+  FLASH_Toggle_gpu_offload( toggle );                           \
                                                                 \
   *info = 0;                                                    \
                                                                 \
