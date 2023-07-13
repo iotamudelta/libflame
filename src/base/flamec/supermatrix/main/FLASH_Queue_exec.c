@@ -74,7 +74,7 @@ typedef struct FLASH_Queue_variables
 {
    // A lock on the global task counter.  
    // Needed only when multithreading is enabled.
-   FLA_Lock     all_lock;
+   FLA_Lock*    all_lock;
 
    // A lock that protects the thread's waiting queue.
    // Needed only when multithreading is enabled.
@@ -265,12 +265,11 @@ void FLASH_Queue_exec( void )
    args.n_caches = n_caches;
 
 #ifdef FLA_ENABLE_MULTITHREADING
-   // Initialize the all lock.
-   FLA_Lock_init( &(args.all_lock) );
-
-   // If needed: allocate memory for array of locks and initialize.
+   // If needed: allocate memory for locks and initialize.
    if ( n_threads > 1 || n_queues > 1 || n_caches > 1 )
    {
+      args.all_lock = ( FLA_Lock* ) FLA_malloc( sizeof( FLA_Lock ) );
+      FLA_Lock_init( args.all_lock );
       run_lock = ( FLA_Lock* ) FLA_malloc( n_queues  * sizeof( FLA_Lock ) );
       args.run_lock = run_lock;
       for ( i = 0; i < n_queues; i++ )
@@ -295,6 +294,7 @@ void FLASH_Queue_exec( void )
    }
    else
    {
+      args.all_lock = NULL;
       args.run_lock = NULL;
       args.dep_lock = NULL;
       args.war_lock = NULL;
@@ -416,7 +416,7 @@ void FLASH_Queue_exec( void )
 
 #ifdef FLA_ENABLE_MULTITHREADING   
    // Destroy the locks.
-   FLA_Lock_destroy( &(args.all_lock) );
+   FLA_Lock_destroy( args.all_lock );
 
    for ( i = 0; i < n_queues; i++ )
    {
@@ -435,6 +435,7 @@ void FLASH_Queue_exec( void )
    }
 
    // Deallocate memory.
+   if ( args.all_lock != NULL ) FLA_free( args.all_lock );
    if ( run_lock != NULL ) FLA_free( run_lock );
    if ( dep_lock != NULL ) FLA_free( dep_lock );
    if ( war_lock != NULL ) FLA_free( war_lock );
@@ -3278,7 +3279,7 @@ void* FLASH_Queue_exec_parallel_function( void* arg )
          }
       }
 
-      FLA_Lock_acquire( &(args->all_lock) ); // A ***
+      FLA_Lock_acquire( args->all_lock ); // A ***
 
       // Increment program counter.
       if ( available && committed )
@@ -3288,7 +3289,7 @@ void* FLASH_Queue_exec_parallel_function( void* arg )
       if ( args->pc >= n_tasks )
          condition = FALSE;
       
-      FLA_Lock_release( &(args->all_lock) ); // A ***
+      FLA_Lock_release( args->all_lock ); // A ***
    }
 
 #ifdef FLA_ENABLE_GPU
