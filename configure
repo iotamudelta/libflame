@@ -703,7 +703,7 @@ INSTALL_PROGRAM
 PYTHON
 RANLIB
 AR
-fla_userdef_fflags
+fla_userdef_fcflags
 ac_ct_FC
 FCFLAGS
 FC
@@ -3646,9 +3646,9 @@ $as_echo "$as_me: FC environment variable is set to $FC, which will override --w
 
 
 
-			fla_userdef_fflags=$FFLAGS
+			fla_userdef_fcflags=$FCFLAGS
 
-						fla_f_compiler_list="gfortran f77 g77 xlf frt pgf77 cf77 fort77 fl32 af77 xlf90 f90 pgf90 pghpf epcf90 g95 xlf95 f95 fort ifort ifc efc pgfortran pgf95 lf95 ftn nagfor"
+						fla_f_compiler_list="gfortran f77 g77 xlf frt pgf77 cf77 fort77 fl32 af77 xlf90 f90 pgf90 pghpf epcf90 g95 xlf95 f95 fort ifort ifc efc pgfortran pgf95 lf95 ftn nagfor mpifort"
 	ac_ext=${ac_fc_srcext-f}
 ac_compile='$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5'
 ac_link='$FC -o conftest$ac_exeext $FCFLAGS $LDFLAGS $ac_fcflags_srcext conftest.$ac_ext $LIBS >&5'

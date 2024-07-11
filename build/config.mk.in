@@ -157,11 +157,15 @@ AR_OBJ_LIST_FILE := ar_obj_list
 
 # --- Determine the Fortran compiler and related flags ---
 FC           := @FC@
-FC_VENDOR    := @FC_VENDOR@
 
 # If the user provided his own FFLAGS, allow them to override our own.
 ifneq (@fla_userdef_fflags@,)
 FFLAGS       := @FFLAGS@ $(FFLAGS)
+endif
+
+# If the user provided their own FCFLAGS, allow them to override our own.
+ifneq (@fla_userdef_fcflags@,)
+FCFLAGS       := @FCFLAGS@ $(FCFLAGS)
 endif
 
 # --- Determine the python interpreter ---
